@@ -30,10 +30,10 @@ function chartStock(ajaxResponse, investment){
 
   console.log(data);
   //Chart dimensions
-  // const margin =  { top: 50, bot: 50, left: 50, right: 50 };
-  const margin = 50;
-  const width = 1000 - 2 * margin;
-  const height = 600 - 2 * margin;
+  const margin =  { top: 50, bot: 50, left: 50, right: 50 };
+  // const margin = 50;
+  const width = 1000 - margin.left - margin.right;
+  const height = 600 - margin.top - margin.bot;
 
   //Calculate with investment
   const units = investment ? (investment / data[0].close) : 1;
@@ -60,11 +60,11 @@ function chartStock(ajaxResponse, investment){
   //svg
   const svg = d3.select('chart').append('svg')
     .attr('class', 'chart')
-    .attr('width', width + 2 * margin)
-    .attr('height', height + 2 * margin);
+    .attr('width', width + margin.left + margin.right)
+    .attr('height', height + margin.top + margin.bot);
 
   const g = svg.append('g')
-    .attr('transform', `translate(${margin}, ${margin})`);
+    .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
   //Append axes
   const xAxisGroup = g.append('g')
@@ -100,11 +100,11 @@ function chartStock(ajaxResponse, investment){
     .attr('d', priceLine(data))
     .attr('stroke', 'blue')
     .attr('stroke-width', 1)
-    .attr('transform', `translate(${margin}, ${margin})`)
+    .attr('transform', `translate(${margin.left}, ${margin.top})`)
     .attr('fill', 'none');
 
   svg.append('rect')
-    .attr('transform', `translate(${margin}, ${margin})`)
+    .attr('transform', `translate(${margin.left}, ${margin.top})`)
     .attr('class', 'overlay')
     .attr('width', width)
     .attr('height', height)
