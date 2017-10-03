@@ -67,3 +67,7 @@ chart {
   stroke-width: 2px;
   stroke-dasharray: 3,3;
 }
+
+.tabcontent {
+  display: none;
+}

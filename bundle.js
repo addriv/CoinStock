@@ -9022,6 +9022,10 @@ var _charts = __webpack_require__(462);
 
 var charts = _interopRequireWildcard(_charts);
 
+var _d = __webpack_require__(170);
+
+var d3 = _interopRequireWildcard(_d);
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function handleAnalyze() {
@@ -9039,12 +9043,47 @@ function handleAnalyze() {
   });
 }
 
-function switchTabs(event, tabType) {}
+function switchTabs(event, tabType) {
+  return function () {
+    var i = void 0,
+        tabcontent = void 0,
+        tablinks = void 0;
+
+    //Get all tabcontent elements and hide them
+    tabcontent = document.getElementsByClassName('tabcontent');
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = 'none';
+    }
+
+    //Get all tablinks and remove active class
+    tablinks = document.getElementsByClassName('tablinks');
+    for (i = 0; i < tablinks.length; i++) {
+      var newClassName = tablinks[i].className.replace('active', '');
+      tablinks[i].className = newClassName;
+    }
+
+    //Reveal current tab and add active class
+    var selectedTab = document.getElementById(tabType);
+    selectedTab.style.display = 'block';
+    var btnId = tabType + '-tab';
+    // debugger;
+    document.getElementById(btnId).className += ' active';
+  };
+}
 
 document.addEventListener('DOMContentLoaded', function () {
+  //Get button elements
   var analyzeBtn = document.getElementById('analyze');
   var singleTab = document.getElementById('single-tab');
   var comparisonTab = document.getElementById('comparison-tab');
+
+  var nasdaqList = void 0;
+  d3.csv('./companylist.csv', function (err, data) {
+    nasdaqList = data;
+  });
+
+  //Add input change envent
+
 
   //Add click events
   analyzeBtn.addEventListener('click', handleAnalyze);
@@ -9052,7 +9091,6 @@ document.addEventListener('DOMContentLoaded', function () {
   comparisonTab.addEventListener('click', switchTabs(event, 'comparison'));
 });
 
-// API Key
 // INCSV57JMRCTRZ1V
 
 /***/ }),
@@ -33017,6 +33055,8 @@ var d3 = _interopRequireWildcard(_d);
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 var chartStock = exports.chartStock = function chartStock(ajaxResponse, investment) {
+  // debugger;
+
   var quotes = ajaxResponse["Time Series (Daily)"];
   var metaData = ajaxResponse["Meta Data"];
   var dates = Object.keys(quotes).sort();
@@ -33137,7 +33177,7 @@ var chartStock = exports.chartStock = function chartStock(ajaxResponse, investme
 
   focus.append('line').attr('class', 'y-hover-line hover-line').attr('x1', 0).attr('x2', 0);
 
-  focus.append('circle').attr('r', 7.5);
+  focus.append('circle').attr('r', 4.5);
 
   focus.append('text').attr('x', 15).attr('dy', '.31em');
 

@@ -8,33 +8,40 @@
   <body>
     <div class="user-inputs">
       <div class="tabs">
-        <button id="single-tab" type="button">Single Ticker</button>
-        <button id="comparison-tab" type="button">Comparison</button>
+        <button id="single-tab" class='tablinks' type="button">Single Ticker</button>
+        <button id="comparison-tab" class='tablinks' type="button">Comparison</button>
       </div>
 
-      <div class="ticker">
-        <label for="ticker">Ticker Symbol</label>
-        <input id="ticker" style="text-transform:uppercase">
-      </div>
-
-      <div class="investment">
-        <label for="investment">Investment</label>
-        <input id="investment" style="text-transform:uppercase">
-      </div>
-
-      <div class="date-range">
-        <div class="start-date">
-          <label for="start-date">Start Date</label>
-          <input id='start-date' type="date">
+      <div id='single' class="tabcontent">
+        <div class="ticker">
+          <label for="ticker">Ticker Symbol</label>
+          <input id="ticker" style="text-transform:uppercase">
         </div>
 
-        <div class="end-date">
-          <label for="end-date">End Date</label>
-          <input id='end-date' type="date">
+        <div class="investment">
+          <label for="investment">Investment</label>
+          <input id="investment" style="text-transform:uppercase">
         </div>
+
+        <div class="date-range">
+          <div class="start-date">
+            <label for="start-date">Start Date</label>
+            <input id='start-date' type="date">
+          </div>
+
+          <div class="end-date">
+            <label for="end-date">End Date</label>
+            <input id='end-date' type="date">
+          </div>
+        </div>
+
+        <button id='analyze' type="button">Analyze</button>
       </div>
 
-      <button id='analyze' type="button">Analyze</button>
+      <div id='comparison' class="tabcontent">
+
+      </div>
+
     </div>
 
     <chart>

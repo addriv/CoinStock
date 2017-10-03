@@ -1,6 +1,8 @@
 import * as d3 from 'd3';
 
 export const chartStock = function (ajaxResponse, investment){
+  // debugger;
+
   const quotes = ajaxResponse["Time Series (Daily)"];
   const metaData = ajaxResponse["Meta Data"];
   const dates = Object.keys(quotes).sort();
@@ -137,7 +139,7 @@ export const chartStock = function (ajaxResponse, investment){
     .attr('x1', 0)
     .attr('x2', 0);
 
-  focus.append('circle').attr('r', 7.5);
+  focus.append('circle').attr('r', 4.5);
 
   focus.append('text')
     .attr('x', 15)
@@ -164,4 +166,4 @@ export const chartStock = function (ajaxResponse, investment){
     return `${legendFormat(new Date(d.date))} - Open: ${d.open},
     Close: ${d.close}, High: ${d.high}, Low: ${d.low}`;
   }
-}
+};
