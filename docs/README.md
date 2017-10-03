@@ -22,7 +22,7 @@ All controls will be on the left side of the chart which gives the user options 
 
 Users will also have the option to put in a mock investment value to calculate resulting changes and potential profits or losses.
 
-![wireframes](https://github.com/addriv/market_visualizer/blob/master/wireframes/main.png)
+![wireframes](https://github.com/addriv/market_visualizer/blob/master/docs/wireframes/main.png)
 
 ## Technologies
 
