@@ -1,7 +1,6 @@
-import $ from 'jquery';
 import * as d3 from 'd3';
 
-function chartStock(ajaxResponse, investment){
+export const chartStock = function (ajaxResponse, investment){
   const quotes = ajaxResponse["Time Series (Daily)"];
   const metaData = ajaxResponse["Meta Data"];
   const dates = Object.keys(quotes).sort();
@@ -147,12 +146,14 @@ function chartStock(ajaxResponse, investment){
     // Mouse move handler
   function mousemove(){
     const x0 = xScale.invert(d3.mouse(this)[0]);
-    const bisectDate = d3.bisector(function(d) { return new Date(d.date); }).left;
+    const bisectDate = d3.bisector(
+      function(d) { return new Date(d.date); }).left;
     const i = bisectDate(data, x0, 1);
     const d0 = data[i - 1];
     const d1 = data[i];
     const d = x0 - d0.date > d1.date - x0 ? d1 : d0;
-    focus.attr('transform', `translate(${xScale(new Date(d.date))}, ${yScale(units * d.close)})`);
+    focus.attr('transform', `translate(${xScale(new Date(d.date))},
+      ${yScale(units * d.close)})`);
     focus.select('text').text(() => d.close);
     focus.select('.x-hover-line').attr('y2', height - yScale(units * d.close));
     focus.select('.y-hover-line').attr('x1', - xScale(new Date(d.date)));
@@ -164,32 +165,3 @@ function chartStock(ajaxResponse, investment){
     Close: ${d.close}, High: ${d.high}, Low: ${d.low}`;
   }
 }
-
-const plot = (ticker, investment) => {
-  $.ajax({
-    method: 'GET',
-    url: `http://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${ticker}&apikey=INCSV57JMRCTRZ1V`,
-  }).then(response => chartStock(response, investment));
-};
-
-function handleAnalyze(){
-  const tickerInput = document.getElementById('ticker');
-  const charts = document.getElementsByClassName('chart');
-  const investment = document.getElementById('investment');
-
-  //Remove charts if they exist
-  if (charts.length > 0) { charts[0].remove(); }
-
-  plot(tickerInput.value, parseInt(investment.value));
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  const analyzeBtn = document.getElementById('analyze');
-
-  //Add click event to analyze button
-  analyzeBtn.addEventListener('click', handleAnalyze);
-});
-
-
-// API Key
-// INCSV57JMRCTRZ1V
