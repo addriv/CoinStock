@@ -1,0 +1,68 @@
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+}
+
+.user-inputs {
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  height: calc(100% - 20px);
+  padding: 10px;
+}
+
+.ticker, .investment {
+  text-align: center;
+  padding: 30px;
+}
+
+.investment{
+  padding-top: 0;
+}
+
+.date-range {
+  text-align: center;
+  padding: 30px;
+  padding-top: 0;
+  display: flex;
+  flex-direction: row;
+}
+
+.start-date, .end-date{
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  padding: 5px;
+}
+
+.user-inputs > button {
+  margin: 30px;
+}
+
+.test {
+  width: calc(100% - 200px);
+  height: 100%;
+}
+
+chart {
+  height: 100%;
+  width: calc(100% - 200px);
+}
+
+.overlay {
+  fill: none;
+  pointer-events: all;
+}
+
+.hover-line {
+  stroke: #6F257F;
+  stroke-width: 2px;
+  stroke-dasharray: 3,3;
+}

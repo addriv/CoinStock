@@ -2,12 +2,38 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <title>Market Visualizer</title>
+    <link rel="stylesheet" type="text/css" href="./stylesheets/application.css">
   </head>
   <body>
-    <label for="ticker">Ticker Symbol</label>
-    <input id="ticker">
-    <button id='analyze' type="button" name="analyze">Analyze</button>
+    <div class="user-inputs">
+      <div class="ticker">
+        <label for="ticker">Ticker Symbol</label>
+        <input id="ticker" style="text-transform:uppercase">
+      </div>
+
+      <div class="investment">
+        <label for="investment">Investment</label>
+        <input id="investment" style="text-transform:uppercase">
+      </div>
+
+      <div class="date-range">
+        <div class="start-date">
+          <label for="start-date">Start Date</label>
+          <input id='start-date' type="date">
+        </div>
+
+        <div class="end-date">
+          <label for="end-date">End Date</label>
+          <input id='end-date' type="date">
+        </div>
+      </div>
+
+      <button id='analyze' type="button">Analyze</button>
+    </div>
+
+    <chart>
+    <chart>
 
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="./bundle.js" type='text/javascript' charset="utf-8"></script>
