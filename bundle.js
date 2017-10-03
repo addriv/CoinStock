@@ -9028,7 +9028,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function chartStock(ajaxResponse, investment) {
   var quotes = ajaxResponse["Time Series (Daily)"];
+  var metaData = ajaxResponse["Meta Data"];
   var dates = Object.keys(quotes).sort();
+  var startDate = dates[0];
+  var endDate = dates.slice(-1);
+
   var data = dates.map(function (date) {
     return {
       date: date,
@@ -9076,18 +9080,19 @@ function chartStock(ajaxResponse, investment) {
     }
   });
 
-  console.log(data);
   //Chart dimensions
-  var margin = { top: 50, bot: 50, left: 50, right: 50 };
-  // const margin = 50;
+  var margin = { top: 70, bot: 50, left: 50, right: 50 };
   var width = 1000 - margin.left - margin.right;
   var height = 600 - margin.top - margin.bot;
+
+  //Formats
+  var legendFormat = d3.timeFormat('%b %d, %Y');
 
   //Calculate with investment
   var units = investment ? investment / data[0].close : 1;
 
   // Scale
-  var xScale = d3.scaleTime().domain([new Date(dates[0]), new Date(dates.slice(-1))]).range([0, width]);
+  var xScale = d3.scaleTime().domain([new Date(startDate), new Date(endDate)]).range([0, width]);
 
   // const x = d3.time.scale().range([0, width]);
   var yScale = d3.scaleLinear().domain([units * minClose, units * maxClose]).range([height, 0]);
@@ -9104,7 +9109,7 @@ function chartStock(ajaxResponse, investment) {
   });
 
   //svg
-  var svg = d3.select('chart').append('svg').attr('class', 'chart').attr('width', width + margin.left + margin.right).attr('height', height + margin.top + margin.bot);
+  var svg = d3.select('chart').append('svg').attr('class', 'svg-chart').attr('width', width + margin.left + margin.right).attr('height', height + margin.top + margin.bot);
 
   var g = svg.append('g').attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
 
@@ -9113,8 +9118,30 @@ function chartStock(ajaxResponse, investment) {
 
   var yAxisGroup = g.append('g').call(yAxis);
 
-  //Focus
+  //Append price line
+  svg.append('path').attr('d', priceLine(data)).attr('stroke', 'blue').attr('stroke-width', 1).attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')').attr('fill', 'none');
+
+  //Statistics and legend bars above chart
+  var legend = svg.append('g').attr('class', 'legend').attr('width', width).attr('height', 30).attr('transform', 'translate(' + margin.left + ', 30)');
+
+  legend.append('text').attr('class', 'ticker').text('NASDAQ: ' + metaData["2. Symbol"].toUpperCase());
+
+  var dateRange = legend.append('g').attr('class', 'date-selection').style('text-anchor', 'end').attr('transform', 'translate(' + width + ', 0)');
+
+  dateRange.append('text').text(legendFormat(new Date(startDate)) + ' -\n          ' + legendFormat(new Date(endDate)));
+
+  var tooltip = legend.append('g').attr('class', 'tooltip').style('text-anchor', 'end').attr('transform', 'translate(' + width + ', 30)');
+
+  var tooltipText = tooltip.append('text');
+
+  //For hover effects
   var focus = g.append('g').attr('class', 'focus').style('display', 'none');
+
+  svg.append('rect').attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')').attr('class', 'overlay').attr('width', width).attr('height', height).on("mouseover", function () {
+    focus.style("display", null);
+  }).on("mouseout", function () {
+    focus.style("display", "none");
+  }).on('mousemove', mousemove);
 
   focus.append('line').attr('class', 'x-hover-line hover-line').attr('y1', 0).attr('y2', height);
 
@@ -9123,15 +9150,6 @@ function chartStock(ajaxResponse, investment) {
   focus.append('circle').attr('r', 7.5);
 
   focus.append('text').attr('x', 15).attr('dy', '.31em');
-
-  //Append line
-  svg.append('path').attr('d', priceLine(data)).attr('stroke', 'blue').attr('stroke-width', 1).attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')').attr('fill', 'none');
-
-  svg.append('rect').attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')').attr('class', 'overlay').attr('width', width).attr('height', height).on("mouseover", function () {
-    focus.style("display", null);
-  }).on("mouseout", function () {
-    focus.style("display", "none");
-  }).on('mousemove', mousemove);
 
   // Mouse move handler
   function mousemove() {
@@ -9149,6 +9167,11 @@ function chartStock(ajaxResponse, investment) {
     });
     focus.select('.x-hover-line').attr('y2', height - yScale(units * d.close));
     focus.select('.y-hover-line').attr('x1', -xScale(new Date(d.date)));
+    tooltipText.text('' + tooltipTextFormat(d));
+  }
+
+  function tooltipTextFormat(d) {
+    return legendFormat(new Date(d.date)) + ' - Open: ' + d.open + ',\n    Close: ' + d.close + ', High: ' + d.high + ', Low: ' + d.low;
   }
 }
 

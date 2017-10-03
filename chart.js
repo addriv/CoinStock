@@ -3,7 +3,11 @@ import * as d3 from 'd3';
 
 function chartStock(ajaxResponse, investment){
   const quotes = ajaxResponse["Time Series (Daily)"];
+  const metaData = ajaxResponse["Meta Data"];
   const dates = Object.keys(quotes).sort();
+  const startDate = dates[0];
+  const endDate = dates.slice(-1);
+
   const data = dates.map(date => {
     return {
       date: date,
@@ -28,19 +32,20 @@ function chartStock(ajaxResponse, investment){
     if (!maxHigh || maxHigh < dayStat.high) { maxHigh = dayStat.high; }
   });
 
-  console.log(data);
   //Chart dimensions
-  const margin =  { top: 50, bot: 50, left: 50, right: 50 };
-  // const margin = 50;
+  const margin =  { top: 70, bot: 50, left: 50, right: 50 };
   const width = 1000 - margin.left - margin.right;
   const height = 600 - margin.top - margin.bot;
+
+  //Formats
+  const legendFormat = d3.timeFormat('%b %d, %Y');
 
   //Calculate with investment
   const units = investment ? (investment / data[0].close) : 1;
 
   // Scale
   const xScale = d3.scaleTime()
-    .domain([new Date(dates[0]), new Date(dates.slice(-1))])
+    .domain([new Date(startDate), new Date(endDate)])
     .range([0,width]);
 
   // const x = d3.time.scale().range([0, width]);
@@ -59,7 +64,7 @@ function chartStock(ajaxResponse, investment){
 
   //svg
   const svg = d3.select('chart').append('svg')
-    .attr('class', 'chart')
+    .attr('class', 'svg-chart')
     .attr('width', width + margin.left + margin.right)
     .attr('height', height + margin.top + margin.bot);
 
@@ -74,10 +79,54 @@ function chartStock(ajaxResponse, investment){
   const yAxisGroup = g.append('g')
     .call(yAxis);
 
-  //Focus
+  //Append price line
+  svg.append('path')
+    .attr('d', priceLine(data))
+    .attr('stroke', 'blue')
+    .attr('stroke-width', 1)
+    .attr('transform', `translate(${margin.left}, ${margin.top})`)
+    .attr('fill', 'none');
+
+  //Statistics and legend bars above chart
+  const legend = svg.append('g')
+    .attr('class', 'legend')
+    .attr('width', width)
+    .attr('height', 30)
+    .attr('transform', `translate(${margin.left}, 30)`);
+
+  legend.append('text')
+    .attr('class', 'ticker')
+    .text(`NASDAQ: ${metaData["2. Symbol"].toUpperCase()}`);
+
+  const dateRange = legend.append('g')
+    .attr('class', 'date-selection')
+    .style('text-anchor', 'end')
+    .attr('transform', `translate(${width}, 0)`);
+
+  dateRange.append('text')
+    .text(`${legendFormat(new Date(startDate))} -
+          ${legendFormat(new Date(endDate))}`);
+
+  const tooltip = legend.append('g')
+    .attr('class', 'tooltip')
+    .style('text-anchor', 'end')
+    .attr('transform', `translate(${width}, 30)`);
+
+  const tooltipText = tooltip.append('text');
+
+  //For hover effects
   const focus = g.append('g')
     .attr('class', 'focus')
     .style('display', 'none');
+
+  svg.append('rect')
+    .attr('transform', `translate(${margin.left}, ${margin.top})`)
+    .attr('class', 'overlay')
+    .attr('width', width)
+    .attr('height', height)
+    .on("mouseover", function() { focus.style("display", null); })
+    .on("mouseout", function() { focus.style("display", "none"); })
+    .on('mousemove', mousemove);
 
   focus.append('line')
     .attr('class', 'x-hover-line hover-line')
@@ -95,23 +144,6 @@ function chartStock(ajaxResponse, investment){
     .attr('x', 15)
     .attr('dy', '.31em');
 
-  //Append line
-  svg.append('path')
-    .attr('d', priceLine(data))
-    .attr('stroke', 'blue')
-    .attr('stroke-width', 1)
-    .attr('transform', `translate(${margin.left}, ${margin.top})`)
-    .attr('fill', 'none');
-
-  svg.append('rect')
-    .attr('transform', `translate(${margin.left}, ${margin.top})`)
-    .attr('class', 'overlay')
-    .attr('width', width)
-    .attr('height', height)
-    .on("mouseover", function() { focus.style("display", null); })
-    .on("mouseout", function() { focus.style("display", "none"); })
-    .on('mousemove', mousemove);
-
     // Mouse move handler
   function mousemove(){
     const x0 = xScale.invert(d3.mouse(this)[0]);
@@ -124,6 +156,12 @@ function chartStock(ajaxResponse, investment){
     focus.select('text').text(() => d.close);
     focus.select('.x-hover-line').attr('y2', height - yScale(units * d.close));
     focus.select('.y-hover-line').attr('x1', - xScale(new Date(d.date)));
+    tooltipText.text(`${tooltipTextFormat(d)}`);
+  }
+
+  function tooltipTextFormat(d){
+    return `${legendFormat(new Date(d.date))} - Open: ${d.open},
+    Close: ${d.close}, High: ${d.high}, Low: ${d.low}`;
   }
 }
 
