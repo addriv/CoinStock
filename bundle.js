@@ -9504,6 +9504,7 @@ var coinTickers = tickerLists.coinList.map(function (coin) {
   return coin["Symbol"].toUpperCase();
 });
 var combinedTickers = tickers.concat(coinTickers);
+console.log(combinedTickers);
 
 // console.log(tickers);
 // console.log(coinTickers);
@@ -9522,12 +9523,16 @@ function handleAnalyze() {
     charts[0].remove();
   }
 
-  // utils.stockAjax(tickerInput.value).then(
-  //   response => charts.chartStock(response, parseInt(investment.value)));
-
-  utils.coinAjax(tickerInput.value).then(function (response) {
-    return charts.chartStock(tickerInput.value, response, parseInt(investment.value));
-  });
+  //Ajax request and chart based on checked ticker type radio button
+  if (document.getElementsByName('ticker-type')[0].checked) {
+    utils.stockAjax(tickerInput.value).then(function (response) {
+      return charts.chartStock(response, parseInt(investment.value));
+    });
+  } else {
+    utils.coinAjax(tickerInput.value).then(function (response) {
+      return charts.chartStock(tickerInput.value, response, parseInt(investment.value));
+    });
+  }
 }
 
 function switchTabs(event, tabType) {

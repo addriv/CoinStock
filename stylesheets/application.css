@@ -20,7 +20,7 @@ body {
 
 .ticker, .investment {
   text-align: center;
-  padding: 30px 5px;
+  padding: 15px 5px;
   display: flex;
   flex-direction: row;
 }
@@ -98,4 +98,14 @@ chart {
 
 ul#autofill > li {
   font-size: 10px;
+}
+
+.ticker-type {
+  text-align: center;
+  padding: 5px;
+}
+
+.tabs {
+  text-align: center;
+  padding: 5px;
 }

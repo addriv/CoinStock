@@ -6,6 +6,7 @@ import * as d3 from 'd3';
 const tickers = tickerLists.stockList.map(company => company["Symbol"]);
 const coinTickers = tickerLists.coinList.map(coin => coin["Symbol"].toUpperCase());
 const combinedTickers = tickers.concat(coinTickers);
+console.log(combinedTickers);
 
 // console.log(tickers);
 // console.log(coinTickers);
@@ -22,14 +23,19 @@ function handleAnalyze(){
   //Remove charts if they exist
   if (charts.length > 0) { charts[0].remove(); }
 
-  // utils.stockAjax(tickerInput.value).then(
-  //   response => charts.chartStock(response, parseInt(investment.value)));
+  //Ajax request and chart based on checked ticker type radio button
+  if (document.getElementsByName('ticker-type')[0].checked){
+    utils.stockAjax(tickerInput.value).then(
+      response => charts.chartStock(response, parseInt(investment.value)));
+  }
+  else {
+    utils.coinAjax(tickerInput.value).then(
+      response => charts.chartStock(
+        tickerInput.value, response, parseInt(investment.value)
+      )
+    );
+  }
 
-  utils.coinAjax(tickerInput.value).then(
-    response => charts.chartStock(
-      tickerInput.value, response, parseInt(investment.value)
-    )
-  );
 }
 
 function switchTabs(event, tabType){

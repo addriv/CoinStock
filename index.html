@@ -12,7 +12,12 @@
         <button id="comparison-tab" class='tablinks' type="button">Comparison</button>
       </div>
 
-      <div id='single' class="tabcontent">
+      <div id='single' class="tabcontent" style="display: block;">
+        <div class="ticker-type">
+          <input type="radio" name="ticker-type" value="stocks" checked>Stocks</input>
+          <input type="radio" name="ticker-type" value="crypto">Crypto Currency</input>
+        </div>
+
         <div class="ticker">
           <label for="ticker">Ticker Symbol</label>
           <div id="search">
