@@ -6,27 +6,21 @@ import * as d3 from 'd3';
 const tickers = tickerLists.stockList.map(company => company["Symbol"]);
 const coinTickers = tickerLists.coinList.map(coin => coin["Symbol"].toUpperCase());
 const combinedTickers = tickers.concat(coinTickers);
-console.log(combinedTickers);
-
-// console.log(tickers);
-// console.log(coinTickers);
-// console.log(combinedTickers);
-// console.log(combinedTickers.filter((symbol, i) => combinedTickers.indexOf(symbol) === i));
-// console.log(tickers);
-// console.log(tickers.filter((symbol, i) => tickers.indexOf(symbol) === i));
 
 function handleAnalyze(){
   const tickerInput = document.getElementById('ticker');
-  const chart = document.getElementsByClassName('chart');
+  const activeCharts = document.getElementsByClassName('svg-chart');
   const investment = document.getElementById('investment');
 
   //Remove charts if they exist
-  if (charts.length > 0) { charts[0].remove(); }
+  for (let i = 0; i < activeCharts.length; i++){
+    activeCharts[i].remove();
+  }
 
   //Ajax request and chart based on checked ticker type radio button
   if (document.getElementsByName('ticker-type')[0].checked){
     utils.stockAjax(tickerInput.value).then(
-      response => charts.chartStock(response, parseInt(investment.value)));
+      response => charts.chartStock(tickerInput.value, response, parseInt(investment.value)));
   }
   else {
     utils.coinAjax(tickerInput.value).then(
@@ -66,8 +60,18 @@ function switchTabs(event, tabType){
 function handleTicker(event){
   const ticker = event.target.value.toUpperCase();
   const autofill = document.getElementById('autofill');
-  const list = tickerLists.stockList
-    .filter(stock => stock["Symbol"].slice(0, ticker.length) === ticker);
+
+  let symbolList;
+  if (document.getElementsByName('ticker-type')[0].checked){
+    symbolList =  tickerLists.stockList;
+  }
+  else { symbolList = tickerLists.coinList; }
+
+  const list = symbolList
+    .filter(
+      entity => entity["Symbol"]
+        .slice(0, ticker.length).toUpperCase() === ticker
+    );
   // const list = tickers.filter(symbol => symbol.slice(0, ticker.length) === ticker);
   const listLength = 5;
 
@@ -81,7 +85,7 @@ function handleTicker(event){
   //Append new searchs
   for (let i = 0; i < listLength && i < list.length; i++){
     const li = document.createElement('li');
-    li.innerHTML = `${list[i]["Symbol"]} - ${list[i]["Name"]}`;
+    li.innerHTML = `${list[i]["Symbol"].toUpperCase()} - ${list[i]["Name"]}`;
     autofill.appendChild(li);
   }
 }

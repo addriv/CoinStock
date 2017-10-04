@@ -9504,29 +9504,21 @@ var coinTickers = tickerLists.coinList.map(function (coin) {
   return coin["Symbol"].toUpperCase();
 });
 var combinedTickers = tickers.concat(coinTickers);
-console.log(combinedTickers);
-
-// console.log(tickers);
-// console.log(coinTickers);
-// console.log(combinedTickers);
-// console.log(combinedTickers.filter((symbol, i) => combinedTickers.indexOf(symbol) === i));
-// console.log(tickers);
-// console.log(tickers.filter((symbol, i) => tickers.indexOf(symbol) === i));
 
 function handleAnalyze() {
   var tickerInput = document.getElementById('ticker');
-  var chart = document.getElementsByClassName('chart');
+  var activeCharts = document.getElementsByClassName('svg-chart');
   var investment = document.getElementById('investment');
 
   //Remove charts if they exist
-  if (charts.length > 0) {
-    charts[0].remove();
+  for (var i = 0; i < activeCharts.length; i++) {
+    activeCharts[i].remove();
   }
 
   //Ajax request and chart based on checked ticker type radio button
   if (document.getElementsByName('ticker-type')[0].checked) {
     utils.stockAjax(tickerInput.value).then(function (response) {
-      return charts.chartStock(response, parseInt(investment.value));
+      return charts.chartStock(tickerInput.value, response, parseInt(investment.value));
     });
   } else {
     utils.coinAjax(tickerInput.value).then(function (response) {
@@ -9565,8 +9557,16 @@ function switchTabs(event, tabType) {
 function handleTicker(event) {
   var ticker = event.target.value.toUpperCase();
   var autofill = document.getElementById('autofill');
-  var list = tickerLists.stockList.filter(function (stock) {
-    return stock["Symbol"].slice(0, ticker.length) === ticker;
+
+  var symbolList = void 0;
+  if (document.getElementsByName('ticker-type')[0].checked) {
+    symbolList = tickerLists.stockList;
+  } else {
+    symbolList = tickerLists.coinList;
+  }
+
+  var list = symbolList.filter(function (entity) {
+    return entity["Symbol"].slice(0, ticker.length).toUpperCase() === ticker;
   });
   // const list = tickers.filter(symbol => symbol.slice(0, ticker.length) === ticker);
   var listLength = 5;
@@ -9583,7 +9583,7 @@ function handleTicker(event) {
   //Append new searchs
   for (var i = 0; i < listLength && i < list.length; i++) {
     var li = document.createElement('li');
-    li.innerHTML = list[i]["Symbol"] + ' - ' + list[i]["Name"];
+    li.innerHTML = list[i]["Symbol"].toUpperCase() + ' - ' + list[i]["Name"];
     autofill.appendChild(li);
   }
 }

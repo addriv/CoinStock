@@ -2,6 +2,7 @@ html, body {
   height: 100%;
   width: 100%;
   margin: 0;
+  background-color: gray;
 }
 
 body {
@@ -16,6 +17,7 @@ body {
   width: 400px;
   height: calc(100% - 20px);
   padding: 10px;
+  padding-top: 50px;
 }
 
 .ticker, .investment {
