@@ -9,9 +9,9 @@ export const stockAjax = (ticker) => (
   })
 );
 
-export const coinAjax = () => (
+export const coinAjax = (coin) => (
   $.ajax({
       method: 'GET',
-      url: 'https://coinbin.org/coins'
+      url: `https://coinbin.org/${coin}/history`
   })
 );

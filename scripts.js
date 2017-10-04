@@ -22,8 +22,12 @@ function handleAnalyze(){
   //Remove charts if they exist
   if (charts.length > 0) { charts[0].remove(); }
 
-  utils.stockAjax(tickerInput.value).then(
-    response => charts.chartStock(response, parseInt(investment.value)));
+  // utils.stockAjax(tickerInput.value).then(
+  //   response => charts.chartStock(response, parseInt(investment.value)));
+
+  utils.coinAjax(tickerInput.value).then(
+    response => charts.chartStock(response, parseInt(investment.value))
+  );
 }
 
 function switchTabs(event, tabType){
@@ -50,8 +54,6 @@ function switchTabs(event, tabType){
     document.getElementById(btnId).className += ' active';
   };
 }
-
-console.log(tickerLists.stockList);
 
 function handleTicker(event){
   const ticker = event.target.value.toUpperCase();
