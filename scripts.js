@@ -26,7 +26,9 @@ function handleAnalyze(){
   //   response => charts.chartStock(response, parseInt(investment.value)));
 
   utils.coinAjax(tickerInput.value).then(
-    response => charts.chartStock(response, parseInt(investment.value))
+    response => charts.chartStock(
+      tickerInput.value, response, parseInt(investment.value)
+    )
   );
 }
 

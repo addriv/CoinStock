@@ -9526,7 +9526,7 @@ function handleAnalyze() {
   //   response => charts.chartStock(response, parseInt(investment.value)));
 
   utils.coinAjax(tickerInput.value).then(function (response) {
-    return charts.chartStock(response, parseInt(investment.value));
+    return charts.chartStock(tickerInput.value, response, parseInt(investment.value));
   });
 }
 
@@ -19913,51 +19913,39 @@ var d3 = _interopRequireWildcard(_d);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-var chartStock = exports.chartStock = function chartStock(ajaxResponse, investment) {
-  var startDate = void 0,
+var chartStock = exports.chartStock = function chartStock(tickerSym, ajaxResponse, investment) {
+  var data = void 0,
+      startDate = void 0,
       endDate = void 0,
       minPrice = void 0,
-      maxPrice = void 0;
+      maxPrice = void 0,
+      priceVariable = void 0;
 
   if (Object.keys(ajaxResponse)[0] === "history") {
-    var parsedData = ajaxResponse["history"].reverse().map(function (quote) {
+    data = ajaxResponse["history"].reverse().map(function (quote) {
       return { date: quote["timestamp"], value: quote["value"] };
     });
 
-    startDate = parsedData[0].date;
-    endDate = parsedData[parsedData.length - 1].date;
+    startDate = data[0].date;
+    endDate = data[data.length - 1].date;
+
+    data.forEach(function (point) {
+      if (!minPrice || minPrice > point.value) {
+        minPrice = point.value;
+      }
+      if (!maxPrice || maxPrice < point.value) {
+        maxPrice = point.value;
+      }
+    });
+
+    priceVariable = "value";
   } else {
-
-    // Mouse move handler
-    var mousemove = function mousemove() {
-      var x0 = xScale.invert(d3.mouse(this)[0]);
-      var bisectDate = d3.bisector(function (d) {
-        return new Date(d.date);
-      }).left;
-      var i = bisectDate(data, x0, 1);
-      var d0 = data[i - 1];
-      var d1 = data[i];
-      var d = x0 - d0.date > d1.date - x0 ? d1 : d0;
-      focus.attr('transform', "translate(" + xScale(new Date(d.date)) + ",\n        " + yScale(units * d.close) + ")");
-      focus.select('text').text(function () {
-        return d.close;
-      });
-      focus.select('.x-hover-line').attr('y2', height - yScale(units * d.close));
-      focus.select('.y-hover-line').attr('x1', -xScale(new Date(d.date)));
-      tooltipText.text("" + tooltipTextFormat(d));
-    };
-
-    var tooltipTextFormat = function tooltipTextFormat(d) {
-      return legendFormat(new Date(d.date)) + " - Open: " + d.open + ",\n      Close: " + d.close + ", High: " + d.high + ", Low: " + d.low;
-    };
-
     var quotes = ajaxResponse["Time Series (Daily)"];
-    var metaData = ajaxResponse["Meta Data"];
     var dates = Object.keys(quotes).sort();
     startDate = dates[0];
     endDate = dates.slice(-1);
 
-    var data = dates.map(function (date) {
+    data = dates.map(function (date) {
       return {
         date: date,
         open: parseFloat(quotes[date]["1. open"]),
@@ -20006,77 +19994,107 @@ var chartStock = exports.chartStock = function chartStock(ajaxResponse, investme
 
     minPrice = minClose;
     maxPrice = maxClose;
+    priceVariable = 'close';
+  }
 
-    //Chart dimensions
-    var margin = { top: 70, bot: 50, left: 50, right: 50 };
-    var width = 1000 - margin.left - margin.right;
-    var height = 600 - margin.top - margin.bot;
+  var metaData = ajaxResponse["Meta Data"];
 
-    //Formats
-    var legendFormat = d3.timeFormat('%b %d, %Y');
+  //Chart dimensions
+  var margin = { top: 70, bot: 50, left: 50, right: 50 };
+  var width = 1000 - margin.left - margin.right;
+  var height = 600 - margin.top - margin.bot;
 
-    //Calculate with investment
-    var units = investment ? investment / data[0].close : 1;
+  //Formats
+  var legendFormat = d3.timeFormat('%b %d, %Y');
 
-    // Scale
-    var xScale = d3.scaleTime().domain([new Date(startDate), new Date(endDate)]).range([0, width]);
+  //Calculate with investment
+  var units = investment ? investment / data[0][priceVariable] : 1;
 
-    // const x = d3.time.scale().range([0, width]);
-    var yScale = d3.scaleLinear().domain([units * minPrice, units * maxClose]).range([height, 0]);
+  // Scale
+  var xScale = d3.scaleTime().domain([new Date(startDate), new Date(endDate)]).range([0, width]);
 
-    //Axes
-    var xAxis = d3.axisBottom(xScale);
-    var yAxis = d3.axisLeft(yScale);
+  // const x = d3.time.scale().range([0, width]);
+  var yScale = d3.scaleLinear().domain([units * minPrice, units * maxPrice]).range([height, 0]);
 
-    //Line function
-    var priceLine = d3.line().x(function (d) {
-      return xScale(new Date(d.date));
-    }).y(function (d) {
-      return yScale(units * d.close);
+  //Axes
+  var xAxis = d3.axisBottom(xScale);
+  var yAxis = d3.axisLeft(yScale);
+
+  //Line function
+  var priceLine = d3.line().x(function (d) {
+    return xScale(new Date(d.date));
+  }).y(function (d) {
+    return yScale(units * d[priceVariable]);
+  });
+
+  //svg
+  var svg = d3.select('chart').append('svg').attr('class', 'svg-chart').attr('width', width + margin.left + margin.right).attr('height', height + margin.top + margin.bot);
+
+  var g = svg.append('g').attr('transform', "translate(" + margin.left + ", " + margin.top + ")");
+
+  //Append axes
+  var xAxisGroup = g.append('g').attr('transform', "translate(0, " + height + ")").call(xAxis);
+
+  var yAxisGroup = g.append('g').call(yAxis);
+
+  //Append price line
+  svg.append('path').attr('d', priceLine(data)).attr('stroke', 'blue').attr('stroke-width', 1).attr('transform', "translate(" + margin.left + ", " + margin.top + ")").attr('fill', 'none');
+
+  //Statistics and legend bars above chart
+  var legend = svg.append('g').attr('class', 'legend').attr('width', width).attr('height', 30).attr('transform', "translate(" + margin.left + ", 30)");
+
+  legend.append('text').attr('class', 'ticker').text("" + tickerSym.toUpperCase());
+
+  var dateRange = legend.append('g').attr('class', 'date-selection').style('text-anchor', 'end').attr('transform', "translate(" + width + ", 0)");
+
+  dateRange.append('text').text(legendFormat(new Date(startDate)) + " -\n          " + legendFormat(new Date(endDate)));
+
+  var tooltip = legend.append('g').attr('class', 'tooltip').style('text-anchor', 'end').attr('transform', "translate(" + width + ", 30)");
+
+  var tooltipText = tooltip.append('text');
+
+  //For hover effects
+  var focus = g.append('g').attr('class', 'focus').style('display', 'none');
+
+  svg.append('rect').attr('transform', "translate(" + margin.left + ", " + margin.top + ")").attr('class', 'overlay').attr('width', width).attr('height', height).on("mouseover", function () {
+    focus.style("display", null);
+  }).on("mouseout", function () {
+    focus.style("display", "none");
+  }).on('mousemove', mousemove);
+
+  focus.append('line').attr('class', 'x-hover-line hover-line').attr('y1', 0).attr('y2', height);
+
+  focus.append('line').attr('class', 'y-hover-line hover-line').attr('x1', 0).attr('x2', 0);
+
+  focus.append('circle').attr('r', 4.5);
+
+  focus.append('text').attr('x', 15).attr('dy', '.31em');
+
+  // Mouse move handler
+  function mousemove() {
+    var x0 = xScale.invert(d3.mouse(this)[0]);
+    var bisectDate = d3.bisector(function (d) {
+      return new Date(d.date);
+    }).left;
+    var i = bisectDate(data, x0, 1);
+    var d0 = data[i - 1];
+    var d1 = data[i];
+    var d = x0 - d0.date > d1.date - x0 ? d1 : d0;
+    focus.attr('transform', "translate(" + xScale(new Date(d.date)) + ",\n      " + yScale(units * d[priceVariable]) + ")");
+    focus.select('text').text(function () {
+      return d[priceVariable];
     });
+    focus.select('.x-hover-line').attr('y2', height - yScale(units * d[priceVariable]));
+    focus.select('.y-hover-line').attr('x1', -xScale(new Date(d.date)));
+    tooltipText.text("" + tooltipTextFormat(d));
+  }
 
-    //svg
-    var svg = d3.select('chart').append('svg').attr('class', 'svg-chart').attr('width', width + margin.left + margin.right).attr('height', height + margin.top + margin.bot);
-
-    var g = svg.append('g').attr('transform', "translate(" + margin.left + ", " + margin.top + ")");
-
-    //Append axes
-    var xAxisGroup = g.append('g').attr('transform', "translate(0, " + height + ")").call(xAxis);
-
-    var yAxisGroup = g.append('g').call(yAxis);
-
-    //Append price line
-    svg.append('path').attr('d', priceLine(data)).attr('stroke', 'blue').attr('stroke-width', 1).attr('transform', "translate(" + margin.left + ", " + margin.top + ")").attr('fill', 'none');
-
-    //Statistics and legend bars above chart
-    var legend = svg.append('g').attr('class', 'legend').attr('width', width).attr('height', 30).attr('transform', "translate(" + margin.left + ", 30)");
-
-    legend.append('text').attr('class', 'ticker').text("NASDAQ: " + metaData["2. Symbol"].toUpperCase());
-
-    var dateRange = legend.append('g').attr('class', 'date-selection').style('text-anchor', 'end').attr('transform', "translate(" + width + ", 0)");
-
-    dateRange.append('text').text(legendFormat(new Date(startDate)) + " -\n            " + legendFormat(new Date(endDate)));
-
-    var tooltip = legend.append('g').attr('class', 'tooltip').style('text-anchor', 'end').attr('transform', "translate(" + width + ", 30)");
-
-    var tooltipText = tooltip.append('text');
-
-    //For hover effects
-    var focus = g.append('g').attr('class', 'focus').style('display', 'none');
-
-    svg.append('rect').attr('transform', "translate(" + margin.left + ", " + margin.top + ")").attr('class', 'overlay').attr('width', width).attr('height', height).on("mouseover", function () {
-      focus.style("display", null);
-    }).on("mouseout", function () {
-      focus.style("display", "none");
-    }).on('mousemove', mousemove);
-
-    focus.append('line').attr('class', 'x-hover-line hover-line').attr('y1', 0).attr('y2', height);
-
-    focus.append('line').attr('class', 'y-hover-line hover-line').attr('x1', 0).attr('x2', 0);
-
-    focus.append('circle').attr('r', 4.5);
-
-    focus.append('text').attr('x', 15).attr('dy', '.31em');
+  function tooltipTextFormat(d) {
+    if (priceVariable === 'value') {
+      return legendFormat(new Date(d.date)) + " - Price: " + d.value;
+    } else {
+      return legendFormat(new Date(d.date)) + " - Open: " + d.open + ",\n      Close: " + d.close + ", High: " + d.high + ", Low: " + d.low;
+    }
   }
 };
 
