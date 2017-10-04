@@ -1,10 +1,18 @@
 import * as utils from './utils';
 import * as charts from './charts';
-import nasdaqList from './tickers';
+import * as tickerLists from './tickers';
+import * as d3 from 'd3';
 
-const tickers = nasdaqList.map(company => company["Symbol"]);
-console.log(tickers);
-console.log(tickers.filter((symbol, i) => tickers.indexOf(symbol) === i));
+const tickers = tickerLists.stockList.map(company => company["Symbol"]);
+const coinTickers = tickerLists.coinList.map(coin => coin["Symbol"].toUpperCase());
+const combinedTickers = tickers.concat(coinTickers);
+
+// console.log(tickers);
+// console.log(coinTickers);
+// console.log(combinedTickers);
+// console.log(combinedTickers.filter((symbol, i) => combinedTickers.indexOf(symbol) === i));
+// console.log(tickers);
+// console.log(tickers.filter((symbol, i) => tickers.indexOf(symbol) === i));
 
 function handleAnalyze(){
   const tickerInput = document.getElementById('ticker');
@@ -43,10 +51,14 @@ function switchTabs(event, tabType){
   };
 }
 
+console.log(tickerLists.stockList);
+
 function handleTicker(event){
   const ticker = event.target.value.toUpperCase();
   const autofill = document.getElementById('autofill');
-  const list = tickers.filter(symbol => symbol.slice(0, ticker.length) === ticker);
+  const list = tickerLists.stockList
+    .filter(stock => stock["Symbol"].slice(0, ticker.length) === ticker);
+  // const list = tickers.filter(symbol => symbol.slice(0, ticker.length) === ticker);
   const listLength = 5;
 
   //Remove all child elements in autofill
@@ -54,10 +66,12 @@ function handleTicker(event){
     autofill.removeChild(autofill.firstChild);
   }
 
+  if (!ticker || list.length === 1 && ticker === list[0]["Symbol"]) { return; }
+
   //Append new searchs
   for (let i = 0; i < listLength && i < list.length; i++){
     const li = document.createElement('li');
-    li.innerHTML = list[i];
+    li.innerHTML = `${list[i]["Symbol"]} - ${list[i]["Name"]}`;
     autofill.appendChild(li);
   }
 }

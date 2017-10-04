@@ -20,9 +20,14 @@ body {
 
 .ticker, .investment {
   text-align: center;
-  padding: 30px;
+  padding: 30px 5px;
   display: flex;
   flex-direction: row;
+}
+
+.ticker > label, .investment > label{
+  padding: 0 10px;
+  width: 115px;
 }
 
 .investment{
@@ -76,6 +81,8 @@ chart {
 
 #search {
   position: relative;
+  width: calc(100% - 115px);
+  text-align: left;
 }
 
 #search > ul#autofill {
@@ -84,4 +91,11 @@ chart {
   margin: 0;
   background-color: white;
   list-style: none;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+
+ul#autofill > li {
+  font-size: 10px;
 }
