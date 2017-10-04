@@ -12,6 +12,7 @@ export const stockAjax = (ticker) => (
 export const coinAjax = (coin) => (
   $.ajax({
       method: 'GET',
-      url: `https://coinbin.org/${coin}/history`
-  })
+      url: `https://min-api.cryptocompare.com/data/histoday?fsym=BTC&tsym=USD&limit=2000`
+    }
+  )
 );

@@ -73,7 +73,7 @@ export const chartStock = function (tickerSym, ajaxResponse, investment){
 
   // const x = d3.time.scale().range([0, width]);
   const yScale = d3.scaleLinear()
-    .domain([units * minPrice, units * maxPrice])
+    .domain([units * minPrice - maxPrice * 0.05, units * maxPrice + maxPrice * 0.05])
     .range([height, 0]);
 
   //Axes

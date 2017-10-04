@@ -12,7 +12,7 @@
         <button id="comparison-tab" class='tablinks' type="button">Comparison</button>
       </div>
 
-      <div id='single' class="tabcontent" style="display: block;">
+      <div id='single' class="tabcontent">
         <div class="ticker-type">
           <input type="radio" name="ticker-type" value="stocks" checked>Stocks</input>
           <input type="radio" name="ticker-type" value="crypto">Crypto Currency</input>
@@ -31,7 +31,7 @@
           <input id="investment" style="text-transform:uppercase">
         </div>
 
-        <div class="date-range">
+        <!-- <div class="date-range">
           <div class="start-date">
             <label for="start-date">Start Date</label>
             <input id='start-date' type="date">
@@ -41,13 +41,45 @@
             <label for="end-date">End Date</label>
             <input id='end-date' type="date">
           </div>
-        </div>
+        </div> -->
 
         <button id='analyze' type="button">Analyze</button>
       </div>
 
-      <div id='comparison' class="tabcontent">
+      <div id='comparison' class="tabcontent"  style="display: block;">
+        <div class="comparison-tickers">
+          <div class="ticker-1-group">
+            <div class="ticker-1-type">
+              <input type="radio" name="ticker-1-type" value="stocks" checked>Stocks</input>
+              <input type="radio" name="ticker-1-type" value="crypto">Crypto Currency</input>
+            </div>
 
+            <div class="ticker-1">
+              <label for="ticker">Ticker 1</label>
+              <div id="search">
+                <input id="ticker-1" style="text-transform:uppercase">
+                <ul id='autofill'></ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="ticker-2-group">
+            <div class="ticker-2-type">
+              <input type="radio" name="ticker-2-type" value="stocks" checked>Stocks</input>
+              <input type="radio" name="ticker-2-type" value="crypto">Crypto Currency</input>
+            </div>
+
+            <div class="ticker-2">
+              <label for="ticker-2">Ticker 2</label>
+              <div id="search">
+                <input id="ticker-2" style="text-transform:uppercase">
+                <ul id='autofill'></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button id='run-comparison' type="button">Run Comparison</button>
       </div>
 
     </div>

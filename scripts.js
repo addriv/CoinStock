@@ -1,11 +1,15 @@
 import * as utils from './utils';
 import * as charts from './charts';
+import comparisonChart from './comparison';
 import * as tickerLists from './tickers';
 import * as d3 from 'd3';
+import parseQuotesData from './quotes_data_parser';
 
 const tickers = tickerLists.stockList.map(company => company["Symbol"]);
 const coinTickers = tickerLists.coinList.map(coin => coin["Symbol"].toUpperCase());
 const combinedTickers = tickers.concat(coinTickers);
+
+// utils.coinAjax().then(response => console.log(response));
 
 function handleAnalyze(){
   const tickerInput = document.getElementById('ticker');
@@ -90,11 +94,32 @@ function handleTicker(event){
   }
 }
 
+function handleComparison(){
+  const ticker1 = document.getElementById('ticker-1').value;
+  const ticker2 = document.getElementById('ticker-2').value;
+  const investment = document.getElementById('investment');
+
+  let firstQuote;
+  utils.coinAjax(ticker1).then(
+    response1 => {
+      firstQuote = parseQuotesData(response1, 'close');
+      return utils.stockAjax(ticker2);
+    }).then(
+      response2 => {
+        const secondQuote = parseQuotesData(response2, 'close');
+        comparisonChart(firstQuote, secondQuote, parseInt(investment.value));
+      }
+    );
+
+}
+
+
 document.addEventListener('DOMContentLoaded', () => {
   //Get button elements
   const analyzeBtn = document.getElementById('analyze');
   const singleTab = document.getElementById('single-tab');
   const comparisonTab = document.getElementById('comparison-tab');
+  const comparisonBtn = document.getElementById('run-comparison');
 
   //Add input change envent
   const tickerInput = document.getElementById('ticker');
@@ -104,6 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
   analyzeBtn.addEventListener('click', handleAnalyze);
   singleTab.addEventListener('click', switchTabs(event, 'single'));
   comparisonTab.addEventListener('click', switchTabs(event, 'comparison'));
+  comparisonBtn.addEventListener('click', handleComparison);
 });
 
 
