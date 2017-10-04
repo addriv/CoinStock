@@ -1,6 +1,10 @@
 import * as utils from './utils';
 import * as charts from './charts';
-import * as d3 from 'd3';
+import nasdaqList from './tickers';
+
+const tickers = nasdaqList.map(company => company["Symbol"]);
+console.log(tickers);
+console.log(tickers.filter((symbol, i) => tickers.indexOf(symbol) === i));
 
 function handleAnalyze(){
   const tickerInput = document.getElementById('ticker');
@@ -35,9 +39,27 @@ function switchTabs(event, tabType){
     const selectedTab = document.getElementById(tabType);
     selectedTab.style.display = 'block';
     const btnId = `${tabType}-tab`;
-    // debugger;
     document.getElementById(btnId).className += ' active';
   };
+}
+
+function handleTicker(event){
+  const ticker = event.target.value.toUpperCase();
+  const autofill = document.getElementById('autofill');
+  const list = tickers.filter(symbol => symbol.slice(0, ticker.length) === ticker);
+  const listLength = 5;
+
+  //Remove all child elements in autofill
+  while (autofill.firstChild) {
+    autofill.removeChild(autofill.firstChild);
+  }
+
+  //Append new searchs
+  for (let i = 0; i < listLength && i < list.length; i++){
+    const li = document.createElement('li');
+    li.innerHTML = list[i];
+    autofill.appendChild(li);
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -46,13 +68,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const singleTab = document.getElementById('single-tab');
   const comparisonTab = document.getElementById('comparison-tab');
 
-  let nasdaqList;
-  d3.csv('./companylist.csv', function(err, data) {
-    nasdaqList = data;
-  });
-
   //Add input change envent
-
+  const tickerInput = document.getElementById('ticker');
+  tickerInput.addEventListener('keyup', handleTicker);
 
   //Add click events
   analyzeBtn.addEventListener('click', handleAnalyze);

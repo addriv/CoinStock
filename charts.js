@@ -149,7 +149,7 @@ export const chartStock = function (ajaxResponse, investment){
   function mousemove(){
     const x0 = xScale.invert(d3.mouse(this)[0]);
     const bisectDate = d3.bisector(
-      function(d) { return new Date(d.date); }).left;
+    function(d) { return new Date(d.date); }).left;
     const i = bisectDate(data, x0, 1);
     const d0 = data[i - 1];
     const d1 = data[i];

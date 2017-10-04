@@ -21,6 +21,8 @@ body {
 .ticker, .investment {
   text-align: center;
   padding: 30px;
+  display: flex;
+  flex-direction: row;
 }
 
 .investment{
@@ -70,4 +72,16 @@ chart {
 
 .tabcontent {
   display: none;
+}
+
+#search {
+  position: relative;
+}
+
+#search > ul#autofill {
+  position: absolute;
+  z-index: 1;
+  margin: 0;
+  background-color: white;
+  list-style: none;
 }
