@@ -6,15 +6,12 @@ import * as d3 from 'd3';
 import parseQuotesData from './quotes_data_parser';
 
 //Variables for testing
-const units = '';
+const UNITS = '';
+const PRICE_TYPE = 'close';
 //Variables for testing
 
-
-const tickers = tickerLists.stockList.map(company => company["Symbol"]);
+const stockTickers = tickerLists.stockList.map(company => company["Symbol"]);
 const coinTickers = tickerLists.coinList.map(coin => coin["Symbol"].toUpperCase());
-const combinedTickers = tickers.concat(coinTickers);
-
-// utils.coinAjax().then(response => console.log(response));
 
 function handleAnalyze(){
   const tickerInput = document.getElementById('ticker');
@@ -68,54 +65,102 @@ function switchTabs(event, tabType){
 
 function handleTicker(event){
   const ticker = event.target.value.toUpperCase();
-  const autofill = document.getElementById('autofill');
+  const tickerId = event.target.id;
+  const tickerTypeRadios = document.getElementsByName(tickerId);
+  const listLabel = document.getElementById('list-label');
 
   let symbolList;
-  if (document.getElementsByName('ticker-type')[0].checked){
+  if (document.getElementsByName(tickerId)[0].checked){
+    listLabel.innerHTML = 'Stocks Ticker List';
     symbolList =  tickerLists.stockList;
   }
-  else { symbolList = tickerLists.coinList; }
+  else {
+    listLabel.innerHTML = 'Crypto Currency Ticker List';
+    symbolList = tickerLists.coinList;
+  }
 
-  const list = symbolList
+  const tickerListUl = document.getElementById('ticker-list');
+
+  const list = ticker ? symbolList
     .filter(
       entity => entity["Symbol"]
         .slice(0, ticker.length).toUpperCase() === ticker
-    );
-  // const list = tickers.filter(symbol => symbol.slice(0, ticker.length) === ticker);
-  const listLength = 5;
+    ) : symbolList;
 
-  //Remove all child elements in autofill
-  while (autofill.firstChild) {
-    autofill.removeChild(autofill.firstChild);
+  //Remove list elements in the ul to fill with new list
+  while (tickerListUl.firstChild) {
+    tickerListUl.removeChild(tickerListUl.firstChild);
   }
-
-  if (!ticker || list.length === 1 && ticker === list[0]["Symbol"]) { return; }
 
   //Append new searchs
-  for (let i = 0; i < listLength && i < list.length; i++){
+  list.forEach(el => {
     const li = document.createElement('li');
-    li.innerHTML = `${list[i]["Symbol"].toUpperCase()} - ${list[i]["Name"]}`;
-    autofill.appendChild(li);
-  }
+    li.innerHTML = `${el.Symbol.toUpperCase()} - ${el.Name}`;
+    tickerListUl.appendChild(li);
+  });
 }
 
 function handleComparison(){
-  const ticker1 = document.getElementById('ticker-1').value;
-  const ticker2 = document.getElementById('ticker-2').value;
-  const investment = document.getElementById('investment');
+  // Remove charts on page
+  const activeCharts = document.getElementsByClassName('svg-chart');
+  for (let i = 0; i < activeCharts.length; i++){
+    activeCharts[i].remove();
+  }
 
-  let firstQuote;
-  utils.stockAjax(ticker1).then(
-    response1 => {
-      firstQuote = parseQuotesData(response1, 'close', units);
-      return utils.stockAjax(ticker2);
-    }).then(
-      response2 => {
-        const secondQuote = parseQuotesData(response2, 'close', units);
-        comparisonChart(firstQuote, secondQuote, parseInt(investment.value), 'close', '%');
+  // Get user ticker input and types
+  const tickerInputs = Array.from(
+    document.getElementsByClassName('ticker-input')
+  );
+  const tickerInfo = [];
+
+  tickerInputs.forEach(input => {
+    const tickerId = input.id;
+    const tickerTypeRadios = document.getElementsByName(tickerId);
+    const tickerType = tickerTypeRadios[0].checked ? 'stocks' : 'coin';
+
+    tickerInfo.push([input.value, tickerType]);
+  });
+
+  let ajaxCurried = curryAjax(tickerInfo);
+  if (tickerInfo[0][1] === 'stocks') {
+    utils.stockAjax(tickerInfo[0][0]).then(res => {
+      ajaxCurried = ajaxCurried(res, tickerInfo[0][0]);
+    });
+  }
+  else {
+    utils.coinAjax(tickerInfo[0][0].toUpperCase()).then(res => {
+      ajaxCurried = ajaxCurried(res, tickerInfo[0][0]);
+    });
+  }
+
+  if (tickerInfo[1][1] === 'stocks') {
+    utils.stockAjax(tickerInfo[1][0]).then(res => {
+      ajaxCurried = ajaxCurried(res, tickerInfo[1][0]);
+    });
+  }
+  else {
+    utils.coinAjax(tickerInfo[1][0].toUpperCase()).then(res => {
+      ajaxCurried = ajaxCurried(res, tickerInfo[1][0]);
+    });
+  }
+
+  function curryAjax(tickerInfoArr){
+    const responses = [];
+    const fn = this;
+
+    function _curriedFn(res, sym){
+      responses.push(parseQuotesData(res, sym, PRICE_TYPE, UNITS));
+
+      if (responses.length === tickerInfoArr.length){
+        comparisonChart(responses[0], responses[1], PRICE_TYPE);
       }
-    );
+      else {
+        return _curriedFn;
+      }
+    }
 
+    return _curriedFn;
+  }
 }
 
 
@@ -126,15 +171,28 @@ document.addEventListener('DOMContentLoaded', () => {
   const comparisonTab = document.getElementById('comparison-tab');
   const comparisonBtn = document.getElementById('run-comparison');
 
-  //Add input change envent
-  const tickerInput = document.getElementById('ticker');
+  //Add input change event
+  const tickerInput = document.getElementById('single-ticker');
+  const tickerInput1 = document.getElementById('ticker-1');
+  const tickerInput2 = document.getElementById('ticker-2');
   tickerInput.addEventListener('keyup', handleTicker);
+  tickerInput1.addEventListener('keyup', handleTicker);
+  tickerInput2.addEventListener('keyup', handleTicker);
 
   //Add click events
   analyzeBtn.addEventListener('click', handleAnalyze);
   singleTab.addEventListener('click', switchTabs(event, 'single'));
   comparisonTab.addEventListener('click', switchTabs(event, 'comparison'));
   comparisonBtn.addEventListener('click', handleComparison);
+
+  //Initial fill ticker list ul with stock list
+  const tickerListUl = document.getElementById('ticker-list');
+  tickerLists.stockList.map((ticker, i) => {
+    const li = document.createElement('li');
+    li.innerHTML = `${tickerLists.stockList[i]["Symbol"].toUpperCase()}
+      - ${tickerLists.stockList[i]["Name"]}`;
+    tickerListUl.appendChild(li);
+  });
 });
 
 

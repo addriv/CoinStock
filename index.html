@@ -14,14 +14,14 @@
 
       <div id='single' class="tabcontent">
         <div class="ticker-type">
-          <input type="radio" name="ticker-type" value="stocks" checked>Stocks</input>
-          <input type="radio" name="ticker-type" value="crypto">Crypto Currency</input>
+          <input type="radio" name="single-ticker" value="stocks" checked>Stocks</input>
+          <input type="radio" name="single-ticker" value="crypto">Crypto Currency</input>
         </div>
 
         <div class="ticker">
           <label for="ticker">Ticker Symbol</label>
           <div id="search">
-            <input id="ticker" style="text-transform:uppercase">
+            <input id="single-ticker" style="text-transform:uppercase">
             <ul id='autofill'></ul>
           </div>
         </div>
@@ -50,29 +50,30 @@
         <div class="comparison-tickers">
           <div class="ticker-1-group">
             <div class="ticker-1-type">
-              <input type="radio" name="ticker-1-type" value="stocks" checked>Stocks</input>
-              <input type="radio" name="ticker-1-type" value="crypto">Crypto Currency</input>
+              <input type="radio" name="ticker-1" value="stocks" checked>Stocks</input>
+              <input type="radio" name="ticker-1" value="crypto">Crypto Currency</input>
             </div>
 
             <div class="ticker-1">
               <label for="ticker">Ticker 1</label>
               <div id="search">
-                <input id="ticker-1" style="text-transform:uppercase">
-                <ul id='autofill'></ul>
+                <input class="ticker-input"
+                  id="ticker-1" style="text-transform:uppercase">
               </div>
             </div>
           </div>
 
           <div class="ticker-2-group">
             <div class="ticker-2-type">
-              <input type="radio" name="ticker-2-type" value="stocks" checked>Stocks</input>
-              <input type="radio" name="ticker-2-type" value="crypto">Crypto Currency</input>
+              <input type="radio" name="ticker-2" value="stocks" checked>Stocks</input>
+              <input type="radio" name="ticker-2" value="crypto">Crypto Currency</input>
             </div>
 
             <div class="ticker-2">
               <label for="ticker-2">Ticker 2</label>
               <div id="search">
-                <input id="ticker-2" style="text-transform:uppercase">
+                <input class="ticker-input"
+                  id="ticker-2" style="text-transform:uppercase">
                 <ul id='autofill'></ul>
               </div>
             </div>
@@ -81,6 +82,11 @@
 
         <button id='run-comparison' type="button">Run Comparison</button>
       </div>
+
+      <div id='list-label'>Stocks Ticker List</div>
+      <ul id='ticker-list'>
+
+      </ul>
 
     </div>
 

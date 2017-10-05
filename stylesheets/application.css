@@ -3,6 +3,7 @@ html, body {
   width: 100%;
   margin: 0;
   background-color: gray;
+  overflow: hidden;
 }
 
 body {
@@ -16,9 +17,11 @@ body {
   flex-direction: column;
   width: 400px;
   height: calc(100% - 20px);
-  padding: 10px;
-  padding-top: 50px;
+  padding: 20px;
   text-align: center;
+  position: relative;
+  top: 5%;
+  min-width: 400px;
 }
 
 .ticker, .investment {
@@ -69,6 +72,7 @@ chart {
 
 .overlay {
   fill: none;
+  cursor: move;
   pointer-events: all;
 }
 
@@ -127,4 +131,22 @@ ul#autofill > li {
 
 .ticker-1-group, .ticker-2-group {
   border: solid black 1px;
+}
+
+.ticker-1-price, .ticker-2-price {
+  clip-path: url(#clip);
+}
+
+#list-label {
+  margin-top: 20px;
+}
+
+ul#ticker-list {
+  height: 300px;
+  overflow-y: scroll;
+  list-style: none;
+  font-size: 11px;
+  text-align: left;
+  background-color: white;
+  padding: 10px;
 }

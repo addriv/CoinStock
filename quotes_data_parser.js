@@ -1,5 +1,7 @@
-function parseQuotesData(quotesData, priceType, valueType){
+function parseQuotesData(quotesData, symbol, priceType, valueType){
   let startDate, endDate, quotes, parsedData, minPrice, maxPrice, priceStart;
+  const avgDayPeriod = 5;
+
   const percentChange = (price, startPrice) => (
     (price - startPrice)/ startPrice * 100
   );
@@ -12,8 +14,21 @@ function parseQuotesData(quotesData, priceType, valueType){
 
     priceStart = parseFloat(quotes[dates[0]][priceKey]);
 
-    parsedData = dates.map(date => {
+    parsedData = dates.map((date, i) => {
       const dayPrice = parseFloat(quotes[date][priceKey]);
+
+      // let averagePrice = 0;
+      // if (i < avgDayPeriod -1){
+      //   dates.slice(0).forEach(el => {
+      //     averagePrice += quotes[el][priceKey];
+      //   });
+      // }
+      // else {
+      //   dates.slice(i - (avgDayPeriod - 1), i + 1)
+      //     .forEach(el => {
+      //       averagePrice += quotes[el][priceKey];
+      //     });
+      // }
 
       // Set prices as percent change if valueType = '%'
       if (valueType === '%'){
@@ -26,12 +41,14 @@ function parseQuotesData(quotesData, priceType, valueType){
         }
 
         return {
+          symbol: symbol,
           date: new Date(date),
           open: percentChange(parseFloat(quotes[date]["1. open"]), priceStart),
           close: percentChange(parseFloat(quotes[date]["4. close"]), priceStart),
           low: percentChange(parseFloat(quotes[date]["3. low"]), priceStart),
           high: percentChange(parseFloat(quotes[date]["2. high"]), priceStart),
-          volume: percentChange(parseInt(quotes[date]["5. volume"]), priceStart)
+          volume: percentChange(parseInt(quotes[date]["5. volume"]), priceStart),
+          // average: averagePrice
         };
       }
       //Else set prices to USD
@@ -44,6 +61,7 @@ function parseQuotesData(quotesData, priceType, valueType){
         }
 
         return {
+          symbol: symbol,
           date: new Date(date),
           open: parseFloat(quotes[date]["1. open"]),
           close: parseFloat(quotes[date]["4. close"]),
@@ -72,11 +90,13 @@ function parseQuotesData(quotesData, priceType, valueType){
           }
 
         return {
+          symbol: symbol,
           date: new Date(quote.time * 1000),
           open: percentChange(quote.open, priceStart),
           close:  percentChange(quote.close, priceStart),
           low:  percentChange(quote.low, priceStart),
-          high:  percentChange(quote.high, priceStart)
+          high:  percentChange(quote.high, priceStart),
+          volume: quote.volumefrom
         };
       }
       else {
@@ -88,11 +108,13 @@ function parseQuotesData(quotesData, priceType, valueType){
         }
 
         return {
+          symbol: symbol,
           date: new Date(quote.time * 1000),
           open: quote.open,
           close: quote.close,
           low: quote.low,
-          high: quote.high
+          high: quote.high,
+          volume: quote.volumefrom
         };
       }
     });
@@ -101,7 +123,7 @@ function parseQuotesData(quotesData, priceType, valueType){
     endDate = parsedData[parsedData.length - 1].date;
   }
 
-  return [parsedData, startDate, endDate, minPrice, maxPrice];
+  return [parsedData, startDate, endDate, minPrice, maxPrice, symbol];
 }
 
 export default parseQuotesData;
