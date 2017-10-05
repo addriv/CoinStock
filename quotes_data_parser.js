@@ -72,7 +72,7 @@ function parseQuotesData(quotesData, priceType, valueType){
           }
 
         return {
-          date: new Date(quote.time),
+          date: new Date(quote.time * 1000),
           open: percentChange(quote.open, priceStart),
           close:  percentChange(quote.close, priceStart),
           low:  percentChange(quote.low, priceStart),
@@ -88,7 +88,7 @@ function parseQuotesData(quotesData, priceType, valueType){
         }
 
         return {
-          date: new Date(quote.time),
+          date: new Date(quote.time * 1000),
           open: quote.open,
           close: quote.close,
           low: quote.low,

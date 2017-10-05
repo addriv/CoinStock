@@ -72,11 +72,23 @@ chart {
   pointer-events: all;
 }
 
-.hover-line {
-  stroke: #6F257F;
+.focus > text, .focus2 > text {
+  position: relative;
+  z-index: 1;
+}
+
+.x-hover-line, .y-hover-line {
+  stroke: blue;
   stroke-width: 2px;
   stroke-dasharray: 3,3;
 }
+
+.x-hover-line2, .y-hover-line2 {
+  stroke: red;
+  stroke-width: 2px;
+  stroke-dasharray: 3,3;
+}
+
 
 .tabcontent {
   display: none;

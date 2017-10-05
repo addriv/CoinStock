@@ -5,6 +5,11 @@ import * as tickerLists from './tickers';
 import * as d3 from 'd3';
 import parseQuotesData from './quotes_data_parser';
 
+//Variables for testing
+const units = '';
+//Variables for testing
+
+
 const tickers = tickerLists.stockList.map(company => company["Symbol"]);
 const coinTickers = tickerLists.coinList.map(coin => coin["Symbol"].toUpperCase());
 const combinedTickers = tickers.concat(coinTickers);
@@ -100,14 +105,14 @@ function handleComparison(){
   const investment = document.getElementById('investment');
 
   let firstQuote;
-  utils.coinAjax(ticker1).then(
+  utils.stockAjax(ticker1).then(
     response1 => {
-      firstQuote = parseQuotesData(response1, 'close');
+      firstQuote = parseQuotesData(response1, 'close', units);
       return utils.stockAjax(ticker2);
     }).then(
       response2 => {
-        const secondQuote = parseQuotesData(response2, 'close');
-        comparisonChart(firstQuote, secondQuote, parseInt(investment.value));
+        const secondQuote = parseQuotesData(response2, 'close', units);
+        comparisonChart(firstQuote, secondQuote, parseInt(investment.value), 'close', '%');
       }
     );
 
