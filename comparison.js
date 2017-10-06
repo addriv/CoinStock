@@ -1,7 +1,9 @@
 import * as d3 from 'd3';
 import parseQuotesData from './quotes_data_parser';
 
-const comparisonChart = function (ticker1Data, ticker2Data, priceType){
+const comparisonChart = function (data, priceType){
+  const ticker1Data  = ticker1Data[0]; 
+  const ticker2Data = ticker1Data[1];
   const startDate = new Date(Math.min(ticker1Data[1], ticker2Data[1]));
   const endDate = new Date(Math.max(ticker1Data[2], ticker2Data[2]));
 
@@ -134,15 +136,15 @@ const comparisonChart = function (ticker1Data, ticker2Data, priceType){
     .attr('stroke-width', 1)
     .attr('fill', 'none');
 
-  const totalLength = ticker1Price.node().getTotalLength();
-
-  ticker1Price
-    .attr("stroke-dasharray", totalLength + " " + totalLength)
-    .attr("stroke-dashoffset", totalLength)
-    .transition()
-    .duration(2000)
-    .ease("linear")
-    .attr("stroke-dashoffset", 0);
+  // const totalLength = ticker1Price.node().getTotalLength();
+  //
+  // ticker1Price
+  //   .attr("stroke-dasharray", totalLength + " " + totalLength)
+  //   .attr("stroke-dashoffset", totalLength)
+  //   .transition()
+  //     .duration(10000)
+  //     .ease("linear")
+  //     .attr("stroke-dashoffset", 0);
 
     // .attr("stroke-dasharray", `${totalLength} ${totalLength}`)
     // .attr("stroke-dashoffset", totalLength)
@@ -163,7 +165,7 @@ const comparisonChart = function (ticker1Data, ticker2Data, priceType){
     .datum(ticker1Data[0])
     .attr('class', 'ticker-3-price')
     .attr('d', volumeLine)
-    .attr('stroke', colors[2])
+    .attr('stroke', colors[1])
     .attr('stroke-width', 1)
     .attr('fill', 'none');
 
@@ -234,14 +236,8 @@ const comparisonChart = function (ticker1Data, ticker2Data, priceType){
     .attr('class', 'overlay')
     .attr('width', width)
     .attr('height', height)
-    .on("mouseover", function() {
-      focus.style("display", null);
-      focus2.style("display", null);
-    })
-    .on("mouseout", function() {
-      focus.style("display", "none");
-      focus2.style("display", "none");
-    })
+    .on("mouseover", focusOn)
+    .on("mouseout", focusOff)
     .on('mousemove', mousemove)
     .call(zoom);
 
@@ -327,6 +323,7 @@ const comparisonChart = function (ticker1Data, ticker2Data, priceType){
 
   function brushed(){
     if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'zoom') return;
+    focusOff();
     const s = d3.event.selection || xScale.range();
     xScale.domain(s.map(x2Scale.invert, x2Scale));
     g.select('.ticker-1-price').attr('d', priceLine);
@@ -339,12 +336,23 @@ const comparisonChart = function (ticker1Data, ticker2Data, priceType){
 
   function zoomed(){
     if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'brush') return;
+    focusOff();
     const t = d3.event.transform;
     xScale.domain(t.rescaleX(x2Scale).domain());
     g.select('.ticker-1-price').attr('d', priceLine);
     g.select('.ticker-2-price').attr('d', priceLine2);
     g.select('.x-axis').call(xAxis);
     context.select('.brush').call(brush.move, xScale.range().map(t.invertX, t));
+  }
+
+  function focusOff() {
+    focus.style("display", "none");
+    focus2.style("display", "none");
+  }
+
+  function focusOn() {
+    focus.style("display", null);
+    focus2.style("display", null);
   }
 };
 export default comparisonChart;

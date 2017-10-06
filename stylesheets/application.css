@@ -150,3 +150,7 @@ ul#ticker-list {
   background-color: white;
   padding: 10px;
 }
+
+ul#ticker-list > li {
+  border-bottom: solid gray 1px;
+}

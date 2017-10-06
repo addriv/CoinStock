@@ -24,7 +24,7 @@ function handleAnalyze(){
   }
 
   //Ajax request and chart based on checked ticker type radio button
-  if (document.getElementsByName('ticker-type')[0].checked){
+  if (document.getElementsByName('single-ticker')[0].checked){
     utils.stockAjax(tickerInput.value).then(
       response => charts.chartStock(tickerInput.value, response, parseInt(investment.value)));
   }
@@ -83,8 +83,11 @@ function handleTicker(event){
 
   const list = ticker ? symbolList
     .filter(
-      entity => entity["Symbol"]
-        .slice(0, ticker.length).toUpperCase() === ticker
+      entity => (
+        entity.Symbol.slice(0, ticker.length)
+          .toUpperCase() === ticker ||
+          entity.Name.toUpperCase().includes(ticker)
+      )
     ) : symbolList;
 
   //Remove list elements in the ul to fill with new list
@@ -96,8 +99,16 @@ function handleTicker(event){
   list.forEach(el => {
     const li = document.createElement('li');
     li.innerHTML = `${el.Symbol.toUpperCase()} - ${el.Name}`;
+    li.id = tickerId;
+    li.addEventListener('click', sendTickerToInput);
     tickerListUl.appendChild(li);
   });
+}
+
+function sendTickerToInput(event){
+  const tickerId = event.target.id;
+  const tickerSym = event.target.innerHTML.split(' - ')[0];
+  document.getElementById(tickerId).value = tickerSym;
 }
 
 function handleComparison(){
@@ -107,52 +118,37 @@ function handleComparison(){
     activeCharts[i].remove();
   }
 
-  // Get user ticker input and types
+  // Get user ticker inputs
   const tickerInputs = Array.from(
     document.getElementsByClassName('ticker-input')
   );
-  const tickerInfo = [];
 
+  let ajaxCurried = curryAjax(tickerInputs.length);
   tickerInputs.forEach(input => {
     const tickerId = input.id;
     const tickerTypeRadios = document.getElementsByName(tickerId);
-    const tickerType = tickerTypeRadios[0].checked ? 'stocks' : 'coin';
 
-    tickerInfo.push([input.value, tickerType]);
+    if (tickerTypeRadios[0].checked) {
+      utils.stockAjax(input.value).then(res => {
+        ajaxCurried = ajaxCurried(res, input.value);
+      });
+    }
+    else {
+      utils.coinAjax(input.value.toUpperCase()).then(res => {
+        ajaxCurried = ajaxCurried(res, input.value);
+      });
+    }
   });
 
-  let ajaxCurried = curryAjax(tickerInfo);
-  if (tickerInfo[0][1] === 'stocks') {
-    utils.stockAjax(tickerInfo[0][0]).then(res => {
-      ajaxCurried = ajaxCurried(res, tickerInfo[0][0]);
-    });
-  }
-  else {
-    utils.coinAjax(tickerInfo[0][0].toUpperCase()).then(res => {
-      ajaxCurried = ajaxCurried(res, tickerInfo[0][0]);
-    });
-  }
-
-  if (tickerInfo[1][1] === 'stocks') {
-    utils.stockAjax(tickerInfo[1][0]).then(res => {
-      ajaxCurried = ajaxCurried(res, tickerInfo[1][0]);
-    });
-  }
-  else {
-    utils.coinAjax(tickerInfo[1][0].toUpperCase()).then(res => {
-      ajaxCurried = ajaxCurried(res, tickerInfo[1][0]);
-    });
-  }
-
-  function curryAjax(tickerInfoArr){
+  function curryAjax(numTickers){
     const responses = [];
     const fn = this;
 
     function _curriedFn(res, sym){
       responses.push(parseQuotesData(res, sym, PRICE_TYPE, UNITS));
 
-      if (responses.length === tickerInfoArr.length){
-        comparisonChart(responses[0], responses[1], PRICE_TYPE);
+      if (responses.length === numTickers){
+        comparisonChart([responses], PRICE_TYPE);
       }
       else {
         return _curriedFn;

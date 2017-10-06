@@ -9674,7 +9674,7 @@ function handleAnalyze() {
   }
 
   //Ajax request and chart based on checked ticker type radio button
-  if (document.getElementsByName('ticker-type')[0].checked) {
+  if (document.getElementsByName('single-ticker')[0].checked) {
     utils.stockAjax(tickerInput.value).then(function (response) {
       return charts.chartStock(tickerInput.value, response, parseInt(investment.value));
     });
@@ -9730,7 +9730,7 @@ function handleTicker(event) {
   var tickerListUl = document.getElementById('ticker-list');
 
   var list = ticker ? symbolList.filter(function (entity) {
-    return entity["Symbol"].slice(0, ticker.length).toUpperCase() === ticker;
+    return entity.Symbol.slice(0, ticker.length).toUpperCase() === ticker || entity.Name.toUpperCase().includes(ticker);
   }) : symbolList;
 
   //Remove list elements in the ul to fill with new list
@@ -9742,8 +9742,16 @@ function handleTicker(event) {
   list.forEach(function (el) {
     var li = document.createElement('li');
     li.innerHTML = el.Symbol.toUpperCase() + ' - ' + el.Name;
+    li.id = tickerId;
+    li.addEventListener('click', sendTickerToInput);
     tickerListUl.appendChild(li);
   });
+}
+
+function sendTickerToInput(event) {
+  var tickerId = event.target.id;
+  var tickerSym = event.target.innerHTML.split(' - ')[0];
+  document.getElementById(tickerId).value = tickerSym;
 }
 
 function handleComparison() {
@@ -9753,48 +9761,34 @@ function handleComparison() {
     activeCharts[i].remove();
   }
 
-  // Get user ticker input and types
+  // Get user ticker inputs
   var tickerInputs = Array.from(document.getElementsByClassName('ticker-input'));
-  var tickerInfo = [];
 
+  var ajaxCurried = curryAjax(tickerInputs.length);
   tickerInputs.forEach(function (input) {
     var tickerId = input.id;
     var tickerTypeRadios = document.getElementsByName(tickerId);
-    var tickerType = tickerTypeRadios[0].checked ? 'stocks' : 'coin';
 
-    tickerInfo.push([input.value, tickerType]);
+    if (tickerTypeRadios[0].checked) {
+      utils.stockAjax(input.value).then(function (res) {
+        ajaxCurried = ajaxCurried(res, input.value);
+      });
+    } else {
+      utils.coinAjax(input.value.toUpperCase()).then(function (res) {
+        ajaxCurried = ajaxCurried(res, input.value);
+      });
+    }
   });
 
-  var ajaxCurried = curryAjax(tickerInfo);
-  if (tickerInfo[0][1] === 'stocks') {
-    utils.stockAjax(tickerInfo[0][0]).then(function (res) {
-      ajaxCurried = ajaxCurried(res, tickerInfo[0][0]);
-    });
-  } else {
-    utils.coinAjax(tickerInfo[0][0].toUpperCase()).then(function (res) {
-      ajaxCurried = ajaxCurried(res, tickerInfo[0][0]);
-    });
-  }
-
-  if (tickerInfo[1][1] === 'stocks') {
-    utils.stockAjax(tickerInfo[1][0]).then(function (res) {
-      ajaxCurried = ajaxCurried(res, tickerInfo[1][0]);
-    });
-  } else {
-    utils.coinAjax(tickerInfo[1][0].toUpperCase()).then(function (res) {
-      ajaxCurried = ajaxCurried(res, tickerInfo[1][0]);
-    });
-  }
-
-  function curryAjax(tickerInfoArr) {
+  function curryAjax(numTickers) {
     var responses = [];
     var fn = this;
 
     function _curriedFn(res, sym) {
       responses.push((0, _quotes_data_parser2.default)(res, sym, PRICE_TYPE, UNITS));
 
-      if (responses.length === tickerInfoArr.length) {
-        (0, _comparison2.default)(responses[0], responses[1], PRICE_TYPE);
+      if (responses.length === numTickers) {
+        (0, _comparison2.default)([responses], PRICE_TYPE);
       } else {
         return _curriedFn;
       }
@@ -33549,7 +33543,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-var comparisonChart = function comparisonChart(ticker1Data, ticker2Data, priceType) {
+var comparisonChart = function comparisonChart(data, priceType) {
+  var ticker1Data = ticker1Data[0];
+  var ticker2Data = ticker1Data[1];
   var startDate = new Date(Math.min(ticker1Data[1], ticker2Data[1]));
   var endDate = new Date(Math.max(ticker1Data[2], ticker2Data[2]));
 
@@ -33652,9 +33648,15 @@ var comparisonChart = function comparisonChart(ticker1Data, ticker2Data, priceTy
   //Append price lines
   var ticker1Price = g.append('path').datum(ticker1Data[0]).attr('class', 'ticker-1-price').attr('d', priceLine).attr('stroke', colors[1]).attr('stroke-width', 1).attr('fill', 'none');
 
-  var totalLength = ticker1Price.node().getTotalLength();
-
-  ticker1Price.attr("stroke-dasharray", totalLength + " " + totalLength).attr("stroke-dashoffset", totalLength).transition().duration(2000).ease("linear").attr("stroke-dashoffset", 0);
+  // const totalLength = ticker1Price.node().getTotalLength();
+  //
+  // ticker1Price
+  //   .attr("stroke-dasharray", totalLength + " " + totalLength)
+  //   .attr("stroke-dashoffset", totalLength)
+  //   .transition()
+  //     .duration(10000)
+  //     .ease("linear")
+  //     .attr("stroke-dashoffset", 0);
 
   // .attr("stroke-dasharray", `${totalLength} ${totalLength}`)
   // .attr("stroke-dashoffset", totalLength)
@@ -33665,7 +33667,7 @@ var comparisonChart = function comparisonChart(ticker1Data, ticker2Data, priceTy
 
   g.append('path').datum(ticker2Data[0]).attr('class', 'ticker-2-price').attr('d', priceLine2).attr('stroke', colors[2]).attr('stroke-width', 1).attr('fill', 'none');
 
-  context.append('path').datum(ticker1Data[0]).attr('class', 'ticker-3-price').attr('d', volumeLine).attr('stroke', colors[2]).attr('stroke-width', 1).attr('fill', 'none');
+  context.append('path').datum(ticker1Data[0]).attr('class', 'ticker-3-price').attr('d', volumeLine).attr('stroke', colors[1]).attr('stroke-width', 1).attr('fill', 'none');
 
   context.append('path').datum(ticker2Data[0]).attr('class', 'ticker-4-price').attr('d', volumeLine2).attr('stroke', colors[2]).attr('stroke-width', 1).attr('fill', 'none');
 
@@ -33696,13 +33698,7 @@ var comparisonChart = function comparisonChart(ticker1Data, ticker2Data, priceTy
 
   var focus2 = g.append('g').attr('class', 'focus2').style('display', 'none');
 
-  svg.append('rect').attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')').attr('class', 'overlay').attr('width', width).attr('height', height).on("mouseover", function () {
-    focus.style("display", null);
-    focus2.style("display", null);
-  }).on("mouseout", function () {
-    focus.style("display", "none");
-    focus2.style("display", "none");
-  }).on('mousemove', mousemove).call(zoom);
+  svg.append('rect').attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')').attr('class', 'overlay').attr('width', width).attr('height', height).on("mouseover", focusOn).on("mouseout", focusOff).on('mousemove', mousemove).call(zoom);
 
   focus.append('line').attr('class', 'x-hover-line hover-line').attr('y1', 0).attr('y2', height);
 
@@ -33765,6 +33761,7 @@ var comparisonChart = function comparisonChart(ticker1Data, ticker2Data, priceTy
 
   function brushed() {
     if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'zoom') return;
+    focusOff();
     var s = d3.event.selection || xScale.range();
     xScale.domain(s.map(x2Scale.invert, x2Scale));
     g.select('.ticker-1-price').attr('d', priceLine);
@@ -33775,12 +33772,23 @@ var comparisonChart = function comparisonChart(ticker1Data, ticker2Data, priceTy
 
   function zoomed() {
     if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'brush') return;
+    focusOff();
     var t = d3.event.transform;
     xScale.domain(t.rescaleX(x2Scale).domain());
     g.select('.ticker-1-price').attr('d', priceLine);
     g.select('.ticker-2-price').attr('d', priceLine2);
     g.select('.x-axis').call(xAxis);
     context.select('.brush').call(brush.move, xScale.range().map(t.invertX, t));
+  }
+
+  function focusOff() {
+    focus.style("display", "none");
+    focus2.style("display", "none");
+  }
+
+  function focusOn() {
+    focus.style("display", null);
+    focus2.style("display", null);
   }
 };
 exports.default = comparisonChart;
