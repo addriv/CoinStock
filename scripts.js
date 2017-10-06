@@ -124,6 +124,7 @@ function sendTickerToInput(event){
   document.getElementById(tickerId).value = tickerSym;
 }
 
+
 function handleComparison(){
   errorsOff();
   spinnerOn();
@@ -230,7 +231,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const li = document.createElement('li');
     li.innerHTML = `${tickerLists.stockList[i]["Symbol"].toUpperCase()}
       - ${tickerLists.stockList[i]["Name"]}`;
-    // li.addEventListener('click', sendTickerToInput(event, 'ticker-1'));
+    li.id = 'ticker-1';
+    li.addEventListener('click', sendTickerToInput);
 
     tickerListUl.appendChild(li);
   });

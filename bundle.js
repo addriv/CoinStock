@@ -9851,7 +9851,8 @@ document.addEventListener('DOMContentLoaded', function () {
   tickerLists.stockList.map(function (ticker, i) {
     var li = document.createElement('li');
     li.innerHTML = tickerLists.stockList[i]["Symbol"].toUpperCase() + '\n      - ' + tickerLists.stockList[i]["Name"];
-    // li.addEventListener('click', sendTickerToInput(event, 'ticker-1'));
+    li.id = 'ticker-1';
+    li.addEventListener('click', sendTickerToInput);
 
     tickerListUl.appendChild(li);
   });

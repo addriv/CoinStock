@@ -237,14 +237,15 @@ chart > chart {
 }
 
 #run-comparison, #analyze {
-  padding: 10px;
-  background-color: white;
+  padding: 10px;;
   border-radius: 6px;
-  font-weight: 500px;
+  font-weight: 800;
+  background-color: white;
+  color: #ffa6c9;
 }
 
 #run-comparison:hover, #analyze:hover {
-  background-color: #ecbcd7;
+  background-color: #ffb2dd;
   color: white;
   font-weight: 900;
 }
@@ -256,6 +257,12 @@ chart > chart {
   background-color: white;
   color: #ffa6c9;
   border: solid 2px rgba(42, 184, 255, 0.49);
+}
+
+#comparison-tab:hover, #single-tab:hover {
+  background-color: #ffb2dd;
+  color: white;
+  font-weight: 900;:
 }
 
 .app-content{
