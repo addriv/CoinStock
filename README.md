@@ -29,8 +29,6 @@ Now you can chart stock prices such as Amazon(AMZN) and S&P 500(SPX) with crypto
 
 Coin stock uses a currying function to allow for simultaneous AJAX requests to pull data from both Alpha Avantage and Crypto Compare APIs.
 
-
-
 ````js
 function curryAjax(numTickers){
   const responses = [];
@@ -50,3 +48,5 @@ function curryAjax(numTickers){
 }
 }
 ````
+
+![Design](https://github.com/addriv/coin_stock/blob/master/assets/images/coinstock_overview.png)
