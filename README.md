@@ -10,6 +10,8 @@ Coin Stock is just the app for that! It is an application that pulls and visuali
 
 Now you can chart stock prices such as Amazon(AMZN) and S&P 500(SPX) with cryptocurrencies like Bitcoin and Ethereum.
 
+![Design](https://github.com/addriv/coin_stock/blob/master/assets/images/coinstock_overview.png)
+
 ## Technologies
 
 * D3.js
@@ -48,5 +50,3 @@ function curryAjax(numTickers){
 }
 }
 ````
-
-![Design](https://github.com/addriv/coin_stock/blob/master/assets/images/coinstock_overview.png)
