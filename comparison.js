@@ -2,7 +2,6 @@ import * as d3 from 'd3';
 import parseQuotesData from './quotes_data_parser';
 
 const comparisonChart = function (data, priceType){
-  debugger;
   const ticker1Data  = data[0];
   const ticker2Data = data[1];
   const startDate = new Date(Math.min(ticker1Data[1], ticker2Data[1]));

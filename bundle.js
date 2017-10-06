@@ -9836,7 +9836,7 @@ document.addEventListener('DOMContentLoaded', function () {
   comparisonTab.addEventListener('click', switchTabs(event, 'comparison'));
 
   //Pull initial data
-  // comparisonBtn.click();
+  comparisonBtn.click();
 
   //Add input change event
   var tickerInput = document.getElementById('single-ticker');
@@ -33581,7 +33581,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 var comparisonChart = function comparisonChart(data, priceType) {
-  debugger;
   var ticker1Data = data[0];
   var ticker2Data = data[1];
   var startDate = new Date(Math.min(ticker1Data[1], ticker2Data[1]));

@@ -370,5 +370,10 @@ chart > chart {
 }
 
 .date-selection > text {
-  font-weight: 500;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.selection {
+  fill: rgba(42, 184, 255, 0.49);
 }
