@@ -15,7 +15,7 @@ const coinTickers = tickerLists.coinList.map(coin => coin["Symbol"].toUpperCase(
 function handleAnalyze(){
   errorsOff();
   spinnerOn();
-
+  disableButtons();
   const tickerInput = document.getElementById('ticker');
   const activeCharts = document.getElementsByClassName('svg-chart');
   const investment = document.getElementById('investment');
@@ -32,6 +32,7 @@ function handleAnalyze(){
         if (res.Response === 'Error' || res['Error Message']) {
           spinnerOff();
           errorsOn();
+          enableButtons();
         }
         else {
           charts.chartStock(tickerInput.value, res, parseInt(investment.value));
@@ -44,6 +45,7 @@ function handleAnalyze(){
         if (res.Response === 'Error' || res['Error Message']) {
           spinnerOff();
           errorsOn();
+          enableButtons();
         }
         else { charts.chartStock(
         tickerInput.value, res, parseInt(investment.value));
@@ -128,6 +130,7 @@ function sendTickerToInput(event){
 function handleComparison(){
   errorsOff();
   spinnerOn();
+  disableButtons();
   // Remove charts on page
   const activeCharts = document.getElementsByClassName('svg-chart');
   for (let i = 0; i < activeCharts.length; i++){
@@ -150,6 +153,7 @@ function handleComparison(){
         if (res.Response === 'Error' || res['Error Message']) {
           spinnerOff();
           errorsOn();
+          enableButtons();
         }
         else { ajaxCurried = ajaxCurried(res, input.value); }
       });
@@ -159,6 +163,7 @@ function handleComparison(){
         if (res.Response === 'Error' || res['Error Message']) {
           spinnerOff();
           errorsOn();
+          enableButtons();
         }
         else { ajaxCurried = ajaxCurried(res, input.value); }
       });
@@ -173,6 +178,7 @@ function handleComparison(){
 
       if (responses.length === numTickers){
         comparisonChart(responses, PRICE_TYPE);
+        enableButtons();
       }
       else {
         return _curriedFn;
@@ -197,6 +203,22 @@ function errorsOn(){
 
 function errorsOff(){
   document.getElementById('errors').style.display = 'none';
+}
+
+function disableButtons(){
+  const compareBtn = document.getElementById('run-comparison');
+  const singleBtn = document.getElementById('analyze');
+
+  compareBtn.disabled = true;
+  singleBtn.disabled = true;
+}
+
+function enableButtons(){
+  const compareBtn = document.getElementById('run-comparison');
+  const singleBtn = document.getElementById('analyze');
+
+  compareBtn.disabled = false;
+  singleBtn.disabled = false;
 }
 
 
@@ -237,6 +259,3 @@ document.addEventListener('DOMContentLoaded', () => {
     tickerListUl.appendChild(li);
   });
 });
-
-
-// INCSV57JMRCTRZ1V

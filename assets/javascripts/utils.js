@@ -1,11 +1,12 @@
 import $ from 'jquery';
+import data from './data';
 
 const size = 'full';
 
 export const stockAjax = (ticker) => (
   $.ajax({
     method: 'GET',
-    url: `https://www.alphavantage.co/query?outputsize=${size}&function=TIME_SERIES_DAILY&symbol=${ticker}&apikey=INCSV57JMRCTRZ1V`,
+    url: `https://www.alphavantage.co/query?outputsize=${size}&function=TIME_SERIES_DAILY&symbol=${ticker}&apikey=${data}`,
   })
 );
 

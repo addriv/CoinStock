@@ -9649,7 +9649,7 @@ var coinTickers = tickerLists.coinList.map(function (coin) {
 function handleAnalyze() {
   errorsOff();
   spinnerOn();
-
+  disableButtons();
   var tickerInput = document.getElementById('ticker');
   var activeCharts = document.getElementsByClassName('svg-chart');
   var investment = document.getElementById('investment');
@@ -9665,6 +9665,7 @@ function handleAnalyze() {
       if (res.Response === 'Error' || res['Error Message']) {
         spinnerOff();
         errorsOn();
+        enableButtons();
       } else {
         charts.chartStock(tickerInput.value, res, parseInt(investment.value));
       }
@@ -9674,6 +9675,7 @@ function handleAnalyze() {
       if (res.Response === 'Error' || res['Error Message']) {
         spinnerOff();
         errorsOn();
+        enableButtons();
       } else {
         charts.chartStock(tickerInput.value, res, parseInt(investment.value));
       }
@@ -9753,6 +9755,7 @@ function sendTickerToInput(event) {
 function handleComparison() {
   errorsOff();
   spinnerOn();
+  disableButtons();
   // Remove charts on page
   var activeCharts = document.getElementsByClassName('svg-chart');
   for (var i = 0; i < activeCharts.length; i++) {
@@ -9773,6 +9776,7 @@ function handleComparison() {
         if (res.Response === 'Error' || res['Error Message']) {
           spinnerOff();
           errorsOn();
+          enableButtons();
         } else {
           ajaxCurried = ajaxCurried(res, input.value);
         }
@@ -9782,6 +9786,7 @@ function handleComparison() {
         if (res.Response === 'Error' || res['Error Message']) {
           spinnerOff();
           errorsOn();
+          enableButtons();
         } else {
           ajaxCurried = ajaxCurried(res, input.value);
         }
@@ -9797,6 +9802,7 @@ function handleComparison() {
 
       if (responses.length === numTickers) {
         (0, _comparison2.default)(responses, PRICE_TYPE);
+        enableButtons();
       } else {
         return _curriedFn;
       }
@@ -9820,6 +9826,22 @@ function errorsOn() {
 
 function errorsOff() {
   document.getElementById('errors').style.display = 'none';
+}
+
+function disableButtons() {
+  var compareBtn = document.getElementById('run-comparison');
+  var singleBtn = document.getElementById('analyze');
+
+  compareBtn.disabled = true;
+  singleBtn.disabled = true;
+}
+
+function enableButtons() {
+  var compareBtn = document.getElementById('run-comparison');
+  var singleBtn = document.getElementById('analyze');
+
+  compareBtn.disabled = false;
+  singleBtn.disabled = false;
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -9858,8 +9880,6 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
-// INCSV57JMRCTRZ1V
-
 /***/ }),
 /* 172 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -9876,6 +9896,10 @@ var _jquery = __webpack_require__(173);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
+var _data = __webpack_require__(466);
+
+var _data2 = _interopRequireDefault(_data);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var size = 'full';
@@ -9883,7 +9907,7 @@ var size = 'full';
 var stockAjax = exports.stockAjax = function stockAjax(ticker) {
   return _jquery2.default.ajax({
     method: 'GET',
-    url: 'https://www.alphavantage.co/query?outputsize=' + size + '&function=TIME_SERIES_DAILY&symbol=' + ticker + '&apikey=INCSV57JMRCTRZ1V'
+    url: 'https://www.alphavantage.co/query?outputsize=' + size + '&function=TIME_SERIES_DAILY&symbol=' + ticker + '&apikey=' + _data2.default
   });
 };
 
@@ -33822,6 +33846,20 @@ var comparisonChart = function comparisonChart(data, priceType) {
   }
 };
 exports.default = comparisonChart;
+
+/***/ }),
+/* 466 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var data = 'INCSV57JMRCTRZ1V';
+
+exports.default = data;
 
 /***/ })
 /******/ ]);
