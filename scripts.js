@@ -213,7 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
   comparisonTab.addEventListener('click', switchTabs(event, 'comparison'));
 
   //Pull initial data
-  // comparisonBtn.click();
+  comparisonBtn.click();
 
   //Add input change event
   const tickerInput = document.getElementById('single-ticker');
