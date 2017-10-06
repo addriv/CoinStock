@@ -9762,6 +9762,7 @@ function handleComparison() {
   // Get user ticker inputs
   var tickerInputs = Array.from(document.getElementsByClassName('ticker-input'));
 
+  // Start currying AJAX requests;
   var ajaxCurried = curryAjax(tickerInputs.length);
   tickerInputs.forEach(function (input) {
     var tickerId = input.id;
@@ -9790,7 +9791,6 @@ function handleComparison() {
 
   function curryAjax(numTickers) {
     var responses = [];
-    var fn = this;
 
     function _curriedFn(res, sym) {
       responses.push((0, _quotes_data_parser2.default)(res, sym, PRICE_TYPE, UNITS));

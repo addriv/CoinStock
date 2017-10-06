@@ -24,3 +24,29 @@ Now you can chart stock prices such as Amazon(AMZN) and S&P 500(SPX) with crypto
 * Pull data for two tickers and chart simultaneously
 * Adjust date range using d3 brush
 * Enter a mock investment value at start date to calculate profit vs time
+
+## Design
+
+Coin stock uses a currying function to allow for simultaneous AJAX requests to pull data from both Alpha Avantage and Crypto Compare APIs.
+
+
+
+````js
+function curryAjax(numTickers){
+  const responses = [];
+
+  function _curriedFn(ajaxResponse){
+    responses.push(parseQuotesData(ajaxResponse));
+
+    if (responses.length === numTickers){
+      comparisonChart(ajaxResponse);
+    }
+    else {
+      return _curriedFn;
+    }
+  }
+
+  return _curriedFn;
+}
+}
+````
