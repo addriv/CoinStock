@@ -165,6 +165,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const comparisonTab = document.getElementById('comparison-tab');
   const comparisonBtn = document.getElementById('run-comparison');
 
+  //Add click events
+  comparisonBtn.addEventListener('click', handleComparison);
+  analyzeBtn.addEventListener('click', handleAnalyze);
+  singleTab.addEventListener('click', switchTabs(event, 'single'));
+  comparisonTab.addEventListener('click', switchTabs(event, 'comparison'));
+
+  //Pull initial data
+  comparisonBtn.click();
+
   //Add input change event
   const tickerInput = document.getElementById('single-ticker');
   const tickerInput1 = document.getElementById('ticker-1');
@@ -173,11 +182,6 @@ document.addEventListener('DOMContentLoaded', () => {
   tickerInput1.addEventListener('keyup', handleTicker);
   tickerInput2.addEventListener('keyup', handleTicker);
 
-  //Add click events
-  analyzeBtn.addEventListener('click', handleAnalyze);
-  singleTab.addEventListener('click', switchTabs(event, 'single'));
-  comparisonTab.addEventListener('click', switchTabs(event, 'comparison'));
-  comparisonBtn.addEventListener('click', handleComparison);
 
   //Initial fill ticker list ul with stock list
   const tickerListUl = document.getElementById('ticker-list');

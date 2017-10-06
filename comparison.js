@@ -136,30 +136,35 @@ const comparisonChart = function (data, priceType){
     .attr('stroke-width', 1)
     .attr('fill', 'none');
 
-  const totalLength = ticker1Price.node().getTotalLength();
 
-  ticker1Price
-    .attr("stroke-dasharray", totalLength + " " + totalLength)
-    .attr("stroke-dashoffset", totalLength)
-    .transition()
-      .duration(4000)
-      .ease(d3.easeLinear)
-      .attr("stroke-dashoffset", 0);
-
-    // .attr("stroke-dasharray", `${totalLength} ${totalLength}`)
-    // .attr("stroke-dashoffset", totalLength)
-    // .transition()
-    // .duration(2000)
-    // .ease("linear")
-    // .attr("stroke-dashoffset", 0);
-
-  g.append('path')
+  const ticker2Price = g.append('path')
     .datum(ticker2Data[0])
     .attr('class', 'ticker-2-price')
     .attr('d', priceLine2)
     .attr('stroke', colors[2])
     .attr('stroke-width', 1)
     .attr('fill', 'none');
+
+  const totalLength = ticker1Price.node().getTotalLength();
+  const totalLength2 = ticker2Price.node().getTotalLength();
+
+  ticker1Price
+    .attr("stroke-dasharray", totalLength + " " + totalLength)
+    .attr("stroke-dashoffset", totalLength)
+    .transition()
+      .duration(5000)
+      .ease(d3.easeLinear)
+      .attr("stroke-dashoffset", 0)
+      .on('end', ()=> ticker1Price.attr('stroke-dasharray', '0 0'));
+
+  ticker2Price
+    .attr("stroke-dasharray", totalLength2 + " " + totalLength2)
+    .attr("stroke-dashoffset", totalLength2)
+    .transition()
+      .duration(5000)
+      .ease(d3.easeLinear)
+      .attr("stroke-dashoffset", 0)
+      .on('end', ()=> ticker2Price.attr('stroke-dasharray', '0 0'));
 
   context.append('path')
     .datum(ticker1Data[0])
@@ -183,10 +188,6 @@ const comparisonChart = function (data, priceType){
     .attr('width', width)
     .attr('height', 30)
     .attr('transform', `translate(${margin.left}, 30)`);
-  //
-  // legend.append('text')
-  //   .attr('class', 'ticker')
-  //   .text(`${tickerSym.toUpperCase()}`);
 
   const dateRange = legend.append('g')
     .attr('class', 'date-selection')
@@ -325,6 +326,9 @@ const comparisonChart = function (data, priceType){
     if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'zoom') return;
     focusOff();
     const s = d3.event.selection || xScale.range();
+    // const range = d3.event.selection;
+    // console.log(new Date(x2Scale.invert(range[0])));
+    // dateRange.text(`${legendFormat(new Date(range[0]))} - ${legendFormat(new Date(range[1]))}`);
     xScale.domain(s.map(x2Scale.invert, x2Scale));
     g.select('.ticker-1-price').attr('d', priceLine);
     g.select('.ticker-2-price').attr('d', priceLine2);

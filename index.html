@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>Market Visualizer</title>
     <link rel="stylesheet" type="text/css" href="./stylesheets/application.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
   </head>
   <body>
     <div class="user-inputs">
@@ -46,22 +47,24 @@
               <label for="ticker">Ticker 1</label>
               <div id="search">
                 <input class="ticker-input"
-                  id="ticker-1" style="text-transform:uppercase">
+                  id="ticker-1" style="text-transform:uppercase"
+                  value="AMZN">
               </div>
             </div>
           </div>
 
           <div class="ticker-2-group">
             <div class="ticker-2-type">
-              <input type="radio" name="ticker-2" value="stocks" checked>Stocks</input>
-              <input type="radio" name="ticker-2" value="crypto">Crypto Currency</input>
+              <input type="radio" name="ticker-2" value="stocks">Stocks</input>
+              <input type="radio" name="ticker-2" value="crypto" checked>Crypto Currency</input>
             </div>
 
             <div class="ticker-2">
               <label for="ticker-2">Ticker 2</label>
               <div id="search">
                 <input class="ticker-input"
-                  id="ticker-2" style="text-transform:uppercase">
+                  id="ticker-2" style="text-transform:uppercase"
+                  value="BTC">
                 <ul id='autofill'></ul>
               </div>
             </div>

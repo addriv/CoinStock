@@ -2,15 +2,16 @@ html, body {
   height: 100%;
   width: 100%;
   margin: 0;
-  background-color: gray;
+  background-color: white;
   overflow: hidden;
+  font-family: "Open Sans";
 }
 
 body {
   display: flex;
   flex-direction: row;
   position: relative;
-  background-color: #c5e9f1;
+  background-color: white;
 }
 
 .user-inputs {
@@ -66,9 +67,13 @@ body {
 }
 
 chart {
-  height: 100%;
-  width: calc(100% - 200px);
+  background-color: rgba(52, 187, 255, 0.49);
   margin-top: 30px;
+  width: 1060px;
+  height: 640px;
+  border: solid #eee 1px;
+  border-radius: 12px;
+  text-align: center;
 }
 
 .overlay {
@@ -132,7 +137,7 @@ ul#autofill > li {
 
 .ticker-1-group, .ticker-2-group {
   border: solid black 1px;
-  border-bottom: solid gray 1px;
+  border-bottom: solid #eee 1px;
   border-radius: 12px;
 }
 
@@ -153,16 +158,22 @@ ul#ticker-list {
   background-color: white;
   padding: 10px;
   border-radius: 12px;
-  border-bottom: solid gray 1px;
+  border: solid #eee 1px;
 }
 
 ul#ticker-list > li {
-  border-bottom: solid gray 1px;
+  border-bottom: solid #eee 1px;
   padding: 5px;
 }
 
 .svg-chart {
-  background-color: #b2ffff;
-  border: solid gray 1px;
+  background-color: #ffffff;
+  border: solid #eee 1px;
   border-radius: 12px;
+  position: relative;
+  top: 20px;
+}
+
+.overlay {
+  background-color:
 }
