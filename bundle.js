@@ -9883,7 +9883,7 @@ var size = 'full';
 var stockAjax = exports.stockAjax = function stockAjax(ticker) {
   return _jquery2.default.ajax({
     method: 'GET',
-    url: 'http://www.alphavantage.co/query?outputsize=' + size + '&function=TIME_SERIES_DAILY&symbol=' + ticker + '&apikey=INCSV57JMRCTRZ1V'
+    url: 'https://www.alphavantage.co/query?outputsize=' + size + '&function=TIME_SERIES_DAILY&symbol=' + ticker + '&apikey=INCSV57JMRCTRZ1V'
   });
 };
 
