@@ -377,3 +377,17 @@ chart > chart {
 .selection {
   fill: rgba(42, 184, 255, 0.49);
 }
+
+#git, #linkedin {
+  width: 40px;
+  position: absolute;
+  top: 22px;
+}
+
+#git {
+  left: 400px;
+}
+
+#linkedin {
+  left: 450px;
+}
