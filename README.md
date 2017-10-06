@@ -1,6 +1,6 @@
 # COIN STOCK
 
-Live version: [Coin Stock](http://www.coinstock.live/)
+Live version: [Coin Stock](https://addriv.github.io/coin_stock/)
 
 ## Overview
 
