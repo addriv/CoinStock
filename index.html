@@ -20,7 +20,7 @@
         </div>
 
         <div class="ticker">
-          <label for="ticker">Ticker Symbol</label>
+          <label for="ticker">Ticker</label>
           <div id="search">
             <input id="single-ticker" style="text-transform:uppercase">
             <ul id='autofill'></ul>
@@ -74,8 +74,10 @@
         <button id='run-comparison' type="button">Run Comparison</button>
       </div>
 
-      <div id='list-label'>Stocks Ticker List</div>
-      <ul id='ticker-list'>
+      <div id='ticker-list-box'>
+        <div id='list-label'>Stocks Ticker List</div>
+        <ul id='ticker-list'>
+      </div>
 
       </ul>
 
@@ -83,8 +85,7 @@
 
     <chart>
     <chart>
-
-    <script src="https://d3js.org/d3.v4.min.js"></script>
-    <script src="./bundle.js" type='text/javascript' charset="utf-8"></script>
+      <script src="https://d3js.org/d3.v4.min.js"></script>
+      <script src="./bundle.js" type='text/javascript' charset="utf-8"></script>
   </body>
 </html>

@@ -42,21 +42,6 @@ body {
   padding-top: 0;
 }
 
-.date-range {
-  text-align: center;
-  padding: 30px;
-  padding-top: 0;
-  display: flex;
-  flex-direction: row;
-}
-
-.start-date, .end-date{
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  padding: 5px;
-}
-
 .user-inputs > button {
   margin: 30px;
 }
@@ -99,30 +84,8 @@ chart {
   stroke-dasharray: 3,3;
 }
 
-
 .tabcontent {
   display: none;
-}
-
-#search {
-  position: relative;
-  width: calc(100% - 115px);
-  text-align: left;
-}
-
-#search > ul#autofill {
-  position: absolute;
-  z-index: 1;
-  margin: 0;
-  background-color: white;
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  padding: 0;
-}
-
-ul#autofill > li {
-  font-size: 10px;
 }
 
 .ticker-type {
@@ -136,9 +99,41 @@ ul#autofill > li {
 }
 
 .ticker-1-group, .ticker-2-group {
-  border: solid black 1px;
-  border-bottom: solid #eee 1px;
+  border: solid #eee 1px;
   border-radius: 12px;
+  padding: 10px 4px;
+  margin: 10px 2px;
+  height: 71px;
+}
+
+#single {
+  border: solid #eee 1px;
+  border-radius: 12px;
+  padding: 10px 4px;
+  margin: 10px 2px;
+  height: 180px;
+}
+
+.ticker-1, .ticker-2 {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.ticker-1 > label, .ticker-2 > label {
+  margin-top: 2px;
+  padding: 10px;
+}
+
+
+#search {
+  position: relative;
+  padding: 5px;
+  text-align: left;
+}
+
+#search > input {
+  margin: 10px;
 }
 
 .ticker-1-price, .ticker-2-price {
@@ -146,7 +141,9 @@ ul#autofill > li {
 }
 
 #list-label {
-  margin-top: 20px;
+  padding: 10px;
+  font-size: 18px;
+  font-weight: bolder;
 }
 
 ul#ticker-list {
@@ -159,6 +156,7 @@ ul#ticker-list {
   padding: 10px;
   border-radius: 12px;
   border: solid #eee 1px;
+  margin: 0;
 }
 
 ul#ticker-list > li {
@@ -174,6 +172,21 @@ ul#ticker-list > li {
   top: 20px;
 }
 
-.overlay {
-  background-color:
+#ticker-list-box {
+  padding: 10px 15px;
+  padding-top: 0;
+  background-color: rgba(52, 187, 255, 0.49);
+  border-radius: 12px;
+  border: solid #eee 1px;
+}
+
+chart > chart {
+  display: none;
+}
+
+#comparison {
+  padding: 10px;
+  border: solid #eee 1px;
+  border-radius: 12px;
+  background-color: rgba(52, 187, 255, 0.49);
 }

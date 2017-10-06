@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
   comparisonTab.addEventListener('click', switchTabs(event, 'comparison'));
 
   //Pull initial data
-  comparisonBtn.click();
+  // comparisonBtn.click();
 
   //Add input change event
   const tickerInput = document.getElementById('single-ticker');
@@ -184,13 +184,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   //Initial fill ticker list ul with stock list
-  const tickerListUl = document.getElementById('ticker-list');
-  tickerLists.stockList.map((ticker, i) => {
-    const li = document.createElement('li');
-    li.innerHTML = `${tickerLists.stockList[i]["Symbol"].toUpperCase()}
-      - ${tickerLists.stockList[i]["Name"]}`;
-    tickerListUl.appendChild(li);
-  });
+  // const tickerListUl = document.getElementById('ticker-list');
+  // tickerLists.stockList.map((ticker, i) => {
+  //   const li = document.createElement('li');
+  //   li.innerHTML = `${tickerLists.stockList[i]["Symbol"].toUpperCase()}
+  //     - ${tickerLists.stockList[i]["Name"]}`;
+  //   tickerListUl.appendChild(li);
+  // });
 });
 
 
