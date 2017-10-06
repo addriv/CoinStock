@@ -38,26 +38,26 @@ Users will also have the option to put in a mock investment value to calculate r
 - [X] Go through D3 tutorials
 
 **Day 1**: Learning D3, testing and setting up stock market price charting
-- [ ] Install stock market type selection
-- [ ] Setup ajax request functions to Alpha Vantage
-- [ ] Build basic line chart on prices with D3
-- [ ] Add volume data bar chart
+- [X] Install stock market type selection
+- [X] Setup ajax request functions to Alpha Vantage
+- [X] Build basic line chart on prices with D3
+- [X] Add volume data bar chart
 
 **Day 2**: Setup crypto currency price charting
 - [ ] Install date pickers for date range
-- [ ] Setup ajax request functions to Coin Bin
-- [ ] Build basic line chart on prices with D3
-- [ ] Install investment functionality
+- [X] Setup ajax request functions to Coin Bin
+- [X] Build basic line chart on prices with D3
+- [X] Install investment functionality
 
 **Day 3**: Setup comparison between two entities and polish chart
 - [ ] Normalize data into percent gain
-- [ ] Install controls for comparison
-- [ ] Add hover effects on chart to display data points and statistics
-- [ ] Add loading spinner while data is being loaded
+- [X] Install controls for comparison
+- [X] Add hover effects on chart to display data points and statistics
+- [X] Add loading spinner while data is being loaded
 
 **Day 4**: Styling and polishing up chart visualization
-- [ ] Style controls
-- [ ] Add icons for links to Github and LinkedIn
+- [X] Style controls
+- [] Add icons for links to Github and LinkedIn
 
 ### Bonus Features
 - [ ] Intraday, weekly, monthly charting for stock market prices
