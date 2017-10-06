@@ -2,8 +2,8 @@ import * as d3 from 'd3';
 import parseQuotesData from './quotes_data_parser';
 
 const comparisonChart = function (data, priceType){
-  const ticker1Data  = ticker1Data[0]; 
-  const ticker2Data = ticker1Data[1];
+  const ticker1Data  = data[0];
+  const ticker2Data = data[1];
   const startDate = new Date(Math.min(ticker1Data[1], ticker2Data[1]));
   const endDate = new Date(Math.max(ticker1Data[2], ticker2Data[2]));
 
@@ -136,15 +136,15 @@ const comparisonChart = function (data, priceType){
     .attr('stroke-width', 1)
     .attr('fill', 'none');
 
-  // const totalLength = ticker1Price.node().getTotalLength();
-  //
-  // ticker1Price
-  //   .attr("stroke-dasharray", totalLength + " " + totalLength)
-  //   .attr("stroke-dashoffset", totalLength)
-  //   .transition()
-  //     .duration(10000)
-  //     .ease("linear")
-  //     .attr("stroke-dashoffset", 0);
+  const totalLength = ticker1Price.node().getTotalLength();
+
+  ticker1Price
+    .attr("stroke-dasharray", totalLength + " " + totalLength)
+    .attr("stroke-dashoffset", totalLength)
+    .transition()
+      .duration(4000)
+      .ease(d3.easeLinear)
+      .attr("stroke-dashoffset", 0);
 
     // .attr("stroke-dasharray", `${totalLength} ${totalLength}`)
     // .attr("stroke-dashoffset", totalLength)

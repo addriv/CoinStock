@@ -9631,17 +9631,13 @@ var _charts = __webpack_require__(174);
 
 var charts = _interopRequireWildcard(_charts);
 
-var _comparison = __webpack_require__(464);
-
-var _comparison2 = _interopRequireDefault(_comparison);
-
 var _tickers = __webpack_require__(465);
 
 var tickerLists = _interopRequireWildcard(_tickers);
 
-var _d = __webpack_require__(47);
+var _comparison = __webpack_require__(464);
 
-var d3 = _interopRequireWildcard(_d);
+var _comparison2 = _interopRequireDefault(_comparison);
 
 var _quotes_data_parser = __webpack_require__(170);
 
@@ -9730,7 +9726,7 @@ function handleTicker(event) {
   var tickerListUl = document.getElementById('ticker-list');
 
   var list = ticker ? symbolList.filter(function (entity) {
-    return entity.Symbol.slice(0, ticker.length).toUpperCase() === ticker || entity.Name.toUpperCase().includes(ticker);
+    return entity.Symbol.slice(0, ticker.length).toUpperCase() === ticker;
   }) : symbolList;
 
   //Remove list elements in the ul to fill with new list
@@ -9788,7 +9784,7 @@ function handleComparison() {
       responses.push((0, _quotes_data_parser2.default)(res, sym, PRICE_TYPE, UNITS));
 
       if (responses.length === numTickers) {
-        (0, _comparison2.default)([responses], PRICE_TYPE);
+        (0, _comparison2.default)(responses, PRICE_TYPE);
       } else {
         return _curriedFn;
       }
@@ -33544,8 +33540,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 var comparisonChart = function comparisonChart(data, priceType) {
-  var ticker1Data = ticker1Data[0];
-  var ticker2Data = ticker1Data[1];
+  var ticker1Data = data[0];
+  var ticker2Data = data[1];
   var startDate = new Date(Math.min(ticker1Data[1], ticker2Data[1]));
   var endDate = new Date(Math.max(ticker1Data[2], ticker2Data[2]));
 
@@ -33648,15 +33644,9 @@ var comparisonChart = function comparisonChart(data, priceType) {
   //Append price lines
   var ticker1Price = g.append('path').datum(ticker1Data[0]).attr('class', 'ticker-1-price').attr('d', priceLine).attr('stroke', colors[1]).attr('stroke-width', 1).attr('fill', 'none');
 
-  // const totalLength = ticker1Price.node().getTotalLength();
-  //
-  // ticker1Price
-  //   .attr("stroke-dasharray", totalLength + " " + totalLength)
-  //   .attr("stroke-dashoffset", totalLength)
-  //   .transition()
-  //     .duration(10000)
-  //     .ease("linear")
-  //     .attr("stroke-dashoffset", 0);
+  var totalLength = ticker1Price.node().getTotalLength();
+
+  ticker1Price.attr("stroke-dasharray", totalLength + " " + totalLength).attr("stroke-dashoffset", totalLength).transition().duration(4000).ease(d3.easeLinear).attr("stroke-dashoffset", 0);
 
   // .attr("stroke-dasharray", `${totalLength} ${totalLength}`)
   // .attr("stroke-dashoffset", totalLength)

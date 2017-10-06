@@ -1,8 +1,7 @@
 import * as utils from './utils';
 import * as charts from './charts';
-import comparisonChart from './comparison';
 import * as tickerLists from './tickers';
-import * as d3 from 'd3';
+import comparisonChart from './comparison';
 import parseQuotesData from './quotes_data_parser';
 
 //Variables for testing
@@ -85,8 +84,7 @@ function handleTicker(event){
     .filter(
       entity => (
         entity.Symbol.slice(0, ticker.length)
-          .toUpperCase() === ticker ||
-          entity.Name.toUpperCase().includes(ticker)
+          .toUpperCase() === ticker
       )
     ) : symbolList;
 
@@ -148,7 +146,7 @@ function handleComparison(){
       responses.push(parseQuotesData(res, sym, PRICE_TYPE, UNITS));
 
       if (responses.length === numTickers){
-        comparisonChart([responses], PRICE_TYPE);
+        comparisonChart(responses, PRICE_TYPE);
       }
       else {
         return _curriedFn;

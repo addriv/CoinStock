@@ -10,6 +10,7 @@ body {
   display: flex;
   flex-direction: row;
   position: relative;
+  background-color: #c5e9f1;
 }
 
 .user-inputs {
@@ -131,6 +132,8 @@ ul#autofill > li {
 
 .ticker-1-group, .ticker-2-group {
   border: solid black 1px;
+  border-bottom: solid gray 1px;
+  border-radius: 12px;
 }
 
 .ticker-1-price, .ticker-2-price {
@@ -149,8 +152,17 @@ ul#ticker-list {
   text-align: left;
   background-color: white;
   padding: 10px;
+  border-radius: 12px;
+  border-bottom: solid gray 1px;
 }
 
 ul#ticker-list > li {
   border-bottom: solid gray 1px;
+  padding: 5px;
+}
+
+.svg-chart {
+  background-color: #b2ffff;
+  border: solid gray 1px;
+  border-radius: 12px;
 }
