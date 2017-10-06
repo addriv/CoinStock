@@ -7,57 +7,90 @@ html, body {
   font-family: "Open Sans";
 }
 
+div {
+  padding: 0;
+  margin: 0;
+}
+
 body {
-  display: flex;
-  flex-direction: row;
-  position: relative;
   background-color: white;
+}
+
+button{
+  box-shadow: none;
+  font-weight: lighter;
+  cursor: pointer;
+  border: none;
+}
+
+input, button {
+  outline: 0;
 }
 
 .user-inputs {
   display: flex;
   flex-direction: column;
-  width: 400px;
+  width: 300px;
   height: calc(100% - 20px);
   padding: 20px;
   text-align: center;
-  position: relative;
-  top: 5%;
-  min-width: 400px;
+  min-width: 300px;
 }
 
 .ticker, .investment {
-  text-align: center;
-  padding: 15px 5px;
   display: flex;
   flex-direction: row;
+  justify-content: center;
+  height: 49px;
 }
 
-.ticker > label, .investment > label{
-  padding: 0 10px;
-  width: 115px;
+.ticker > #search {
+  position: relative;
+  left: 18px;
 }
 
-.investment{
-  padding-top: 0;
+.investment > label {
+  position: relative;
+  right: 5px;
+}
+
+.ticker > label {
+  position: relative;
+  top: 4px;
+  left: 10px;
+}
+
+
+#investment {
+  position: relative;
+  top: 12px;
+}
+
+label {
+  padding: 10px;
+}
+
+#investment, #single-ticker, input#ticker-1, input#ticker-2 {
+  height: 13px;
+  padding-bottom: 4px;
+  text-align: center;
 }
 
 .user-inputs > button {
   margin: 30px;
 }
 
-.test {
-  width: calc(100% - 200px);
-  height: 100%;
-}
-
 chart {
   background-color: rgba(52, 187, 255, 0.49);
-  margin-top: 30px;
-  width: 1060px;
+  width: 960px;
   height: 640px;
   border: solid #eee 1px;
   border-radius: 12px;
+  text-align: center;
+  position: relative;
+}
+
+h1 {
   text-align: center;
 }
 
@@ -73,13 +106,11 @@ chart {
 }
 
 .x-hover-line, .y-hover-line {
-  stroke: blue;
   stroke-width: 2px;
   stroke-dasharray: 3,3;
 }
 
 .x-hover-line2, .y-hover-line2 {
-  stroke: red;
   stroke-width: 2px;
   stroke-dasharray: 3,3;
 }
@@ -104,14 +135,22 @@ chart {
   padding: 10px 4px;
   margin: 10px 2px;
   height: 71px;
+  background-color: white;
 }
 
-#single {
+.single-ticker {
+  background-color: white;
   border: solid #eee 1px;
   border-radius: 12px;
   padding: 10px 4px;
   margin: 10px 2px;
-  height: 180px;
+  height: 130px;
+  position: relative;;
+}
+
+.single-ticker, #analyze{
+  position: relative;
+  top: 20px;
 }
 
 .ticker-1, .ticker-2 {
@@ -161,7 +200,11 @@ ul#ticker-list {
 
 ul#ticker-list > li {
   border-bottom: solid #eee 1px;
-  padding: 5px;
+  padding: 10px 5px;
+}
+
+.ticker-type, .ticker-1-type, .ticker-2-type {
+  font-size: 13px;
 }
 
 .svg-chart {
@@ -184,9 +227,142 @@ chart > chart {
   display: none;
 }
 
-#comparison {
+#comparison, #single {
+  margin: 10px 0;
   padding: 10px;
   border: solid #eee 1px;
   border-radius: 12px;
   background-color: rgba(52, 187, 255, 0.49);
+  height: 249px;
+}
+
+#run-comparison, #analyze {
+  padding: 10px;
+  background-color: white;
+  border-radius: 6px;
+  font-weight: 500px;
+}
+
+#run-comparison:hover, #analyze:hover {
+  background-color: #ecbcd7;
+  color: white;
+  font-weight: 900;
+}
+
+#comparison-tab, #single-tab {
+  padding: 10px;;
+  border-radius: 6px;
+  font-weight: 800;
+  background-color: white;
+  /*color: black;*/
+  color: rgba(42, 184, 255, 0.49);
+  border: solid 2px rgba(42, 184, 255, 0.49);
+}
+
+.app-content{
+  display: flex;
+  flex-direction: row;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 700px;
+}
+
+.app-chart {
+  display: flex;
+  flex-direction: column;
+}
+
+.error-messages {
+  display: none;
+  position: absolute;
+  top: 260px;
+  left: 350px;
+  color: #e60909;
+  font-weight: 900;
+  font-size: 25px;
+  background-color: white;
+  border-radius: 50px;
+  padding: 10px 20px;
+  text-align: center;
+}
+
+/*Loader https://projects.lukehaas.me/css-loaders/*/
+.loader {
+  display: none;
+  color: #ffffff;
+  font-size: 20px;
+  margin: 100px auto;
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  position: absolute;
+  text-indent: -9999em;
+  -webkit-animation: load4 1.3s infinite linear;
+  animation: load4 1.3s infinite linear;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  top: 200px;
+  left: 470px;
+}
+
+@-webkit-keyframes load4 {
+  0%,
+  100% {
+    box-shadow: 0 -3em 0 0.2em, 2em -2em 0 0em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 0;
+  }
+  12.5% {
+    box-shadow: 0 -3em 0 0, 2em -2em 0 0.2em, 3em 0 0 0, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 -1em;
+  }
+  25% {
+    box-shadow: 0 -3em 0 -0.5em, 2em -2em 0 0, 3em 0 0 0.2em, 2em 2em 0 0, 0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 -1em;
+  }
+  37.5% {
+    box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0em 0 0, 2em 2em 0 0.2em, 0 3em 0 0em, -2em 2em 0 -1em, -3em 0em 0 -1em, -2em -2em 0 -1em;
+  }
+  50% {
+    box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 0em, 0 3em 0 0.2em, -2em 2em 0 0, -3em 0em 0 -1em, -2em -2em 0 -1em;
+  }
+  62.5% {
+    box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 0, -2em 2em 0 0.2em, -3em 0 0 0, -2em -2em 0 -1em;
+  }
+  75% {
+    box-shadow: 0em -3em 0 -1em, 2em -2em 0 -1em, 3em 0em 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 0, -3em 0em 0 0.2em, -2em -2em 0 0;
+  }
+  87.5% {
+    box-shadow: 0em -3em 0 0, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 0, -3em 0em 0 0, -2em -2em 0 0.2em;
+  }
+}
+@keyframes load4 {
+  0%,
+  100% {
+    box-shadow: 0 -3em 0 0.2em, 2em -2em 0 0em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 0;
+  }
+  12.5% {
+    box-shadow: 0 -3em 0 0, 2em -2em 0 0.2em, 3em 0 0 0, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 -1em;
+  }
+  25% {
+    box-shadow: 0 -3em 0 -0.5em, 2em -2em 0 0, 3em 0 0 0.2em, 2em 2em 0 0, 0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 -1em;
+  }
+  37.5% {
+    box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0em 0 0, 2em 2em 0 0.2em, 0 3em 0 0em, -2em 2em 0 -1em, -3em 0em 0 -1em, -2em -2em 0 -1em;
+  }
+  50% {
+    box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 0em, 0 3em 0 0.2em, -2em 2em 0 0, -3em 0em 0 -1em, -2em -2em 0 -1em;
+  }
+  62.5% {
+    box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 0, -2em 2em 0 0.2em, -3em 0 0 0, -2em -2em 0 -1em;
+  }
+  75% {
+    box-shadow: 0em -3em 0 -1em, 2em -2em 0 -1em, 3em 0em 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 0, -3em 0em 0 0.2em, -2em -2em 0 0;
+  }
+  87.5% {
+    box-shadow: 0em -3em 0 0, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 0, -3em 0em 0 0, -2em -2em 0 0.2em;
+  }
+}
+
+.date-selection > text {
+  font-weight: 500;
 }

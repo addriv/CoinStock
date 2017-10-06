@@ -2,6 +2,7 @@ import * as d3 from 'd3';
 import parseQuotesData from './quotes_data_parser';
 
 const comparisonChart = function (data, priceType){
+  debugger;
   const ticker1Data  = data[0];
   const ticker2Data = data[1];
   const startDate = new Date(Math.min(ticker1Data[1], ticker2Data[1]));
@@ -10,10 +11,10 @@ const comparisonChart = function (data, priceType){
   //Chart dimensions
   const margin =  { top: 80, bot: 140, left: 80, right: 80 };
   const margin2 = { top: 480, bot: 50, left: 80, right: 80};
-  const width = 1000 - margin.left - margin.right;
+  const width = 900 - margin.left - margin.right;
   const height = 600 - margin.top - margin.bot;
   const height2 = 600 - margin2.top - margin2.bot;
-  const colors = { 1: 'blue', 2: 'red' };
+  const colors = { 1: d3.color('rgba(42, 184, 255, 0.49)'), 2: d3.color('#ffa6c9') };
 
   //Formats
   const legendFormat = d3.timeFormat('%b %d, %Y');
@@ -245,20 +246,24 @@ const comparisonChart = function (data, priceType){
   focus.append('line')
     .attr('class', 'x-hover-line hover-line')
     .attr('y1', 0)
+    .attr('stroke', colors[1])
     .attr('y2', height);
 
   focus.append('line')
     .attr('class', 'y-hover-line hover-line')
+    .attr('stroke', colors[1])
     .attr('x1', 0)
     .attr('x2', 0);
 
   focus2.append('line')
     .attr('class', 'x-hover-line2 hover-line')
+    .attr('stroke', colors[2])
     .attr('y1', 0)
     .attr('y2', height);
 
   focus2.append('line')
     .attr('class', 'y-hover-line2 hover-line')
+    .attr('stroke', colors[2])
     .attr('x1', 0)
     .attr('x2', width);
 

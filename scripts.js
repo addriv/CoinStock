@@ -13,6 +13,9 @@ const stockTickers = tickerLists.stockList.map(company => company["Symbol"]);
 const coinTickers = tickerLists.coinList.map(coin => coin["Symbol"].toUpperCase());
 
 function handleAnalyze(){
+  errorsOff();
+  spinnerOn();
+
   const tickerInput = document.getElementById('ticker');
   const activeCharts = document.getElementsByClassName('svg-chart');
   const investment = document.getElementById('investment');
@@ -24,17 +27,29 @@ function handleAnalyze(){
 
   //Ajax request and chart based on checked ticker type radio button
   if (document.getElementsByName('single-ticker')[0].checked){
-    utils.stockAjax(tickerInput.value).then(
-      response => charts.chartStock(tickerInput.value, response, parseInt(investment.value)));
-  }
+    utils.coinAjax(tickerInput.value.toUpperCase()).then(
+      res => {
+        if (res.Response === 'Error' || res['Error Message']) {
+          spinnerOff();
+          errorsOn();
+        }
+        else {
+          charts.chartStock(tickerInput.value, res, parseInt(investment.value));
+        }
+      });
+    }
   else {
-    utils.coinAjax(tickerInput.value).then(
-      response => charts.chartStock(
-        tickerInput.value, response, parseInt(investment.value)
-      )
-    );
+    utils.stockAjax(tickerInput.value.toUpperCase()).then(
+      res => {
+        if (res.Response === 'Error' || res['Error Message']) {
+          spinnerOff();
+          errorsOn();
+        }
+        else { charts.chartStock(
+        tickerInput.value, res, parseInt(investment.value));
+      }
+    });
   }
-
 }
 
 function switchTabs(event, tabType){
@@ -70,12 +85,12 @@ function handleTicker(event){
 
   let symbolList;
   if (document.getElementsByName(tickerId)[0].checked){
-    listLabel.innerHTML = 'Stocks Ticker List';
-    symbolList =  tickerLists.stockList;
+    listLabel.innerHTML = 'Coin Tickers';
+    symbolList =  tickerLists.coinList;
   }
   else {
-    listLabel.innerHTML = 'Crypto Currency Ticker List';
-    symbolList = tickerLists.coinList;
+    listLabel.innerHTML = 'Stock Tickers';
+    symbolList = tickerLists.stockList;
   }
 
   const tickerListUl = document.getElementById('ticker-list');
@@ -110,6 +125,8 @@ function sendTickerToInput(event){
 }
 
 function handleComparison(){
+  errorsOff();
+  spinnerOn();
   // Remove charts on page
   const activeCharts = document.getElementsByClassName('svg-chart');
   for (let i = 0; i < activeCharts.length; i++){
@@ -127,13 +144,21 @@ function handleComparison(){
     const tickerTypeRadios = document.getElementsByName(tickerId);
 
     if (tickerTypeRadios[0].checked) {
-      utils.stockAjax(input.value).then(res => {
-        ajaxCurried = ajaxCurried(res, input.value);
+      utils.coinAjax(input.value.toUpperCase()).then(res => {
+        if (res.Response === 'Error' || res['Error Message']) {
+          spinnerOff();
+          errorsOn();
+        }
+        else { ajaxCurried = ajaxCurried(res, input.value); }
       });
     }
     else {
-      utils.coinAjax(input.value.toUpperCase()).then(res => {
-        ajaxCurried = ajaxCurried(res, input.value);
+      utils.stockAjax(input.value.toUpperCase()).then(res => {
+        if (res.Response === 'Error' || res['Error Message']) {
+          spinnerOff();
+          errorsOn();
+        }
+        else { ajaxCurried = ajaxCurried(res, input.value); }
       });
     }
   });
@@ -155,6 +180,22 @@ function handleComparison(){
 
     return _curriedFn;
   }
+}
+
+function spinnerOff(){
+  document.getElementById('loading-spinner').style.display = 'none';
+}
+
+function spinnerOn(){
+  document.getElementById('loading-spinner').style.display = 'block';
+}
+
+function errorsOn(){
+  document.getElementById('errors').style.display = 'block';
+}
+
+function errorsOff(){
+  document.getElementById('errors').style.display = 'none';
 }
 
 
@@ -184,13 +225,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   //Initial fill ticker list ul with stock list
-  // const tickerListUl = document.getElementById('ticker-list');
-  // tickerLists.stockList.map((ticker, i) => {
-  //   const li = document.createElement('li');
-  //   li.innerHTML = `${tickerLists.stockList[i]["Symbol"].toUpperCase()}
-  //     - ${tickerLists.stockList[i]["Name"]}`;
-  //   tickerListUl.appendChild(li);
-  // });
+  const tickerListUl = document.getElementById('ticker-list');
+  tickerLists.stockList.map((ticker, i) => {
+    const li = document.createElement('li');
+    li.innerHTML = `${tickerLists.stockList[i]["Symbol"].toUpperCase()}
+      - ${tickerLists.stockList[i]["Name"]}`;
+    // li.addEventListener('click', sendTickerToInput(event, 'ticker-1'));
+
+    tickerListUl.appendChild(li);
+  });
 });
 
 

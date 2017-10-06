@@ -16,20 +16,7 @@ function parseQuotesData(quotesData, symbol, priceType, valueType){
 
     parsedData = dates.map((date, i) => {
       const dayPrice = parseFloat(quotes[date][priceKey]);
-
-      // let averagePrice = 0;
-      // if (i < avgDayPeriod -1){
-      //   dates.slice(0).forEach(el => {
-      //     averagePrice += quotes[el][priceKey];
-      //   });
-      // }
-      // else {
-      //   dates.slice(i - (avgDayPeriod - 1), i + 1)
-      //     .forEach(el => {
-      //       averagePrice += quotes[el][priceKey];
-      //     });
-      // }
-
+      
       // Set prices as percent change if valueType = '%'
       if (valueType === '%'){
 

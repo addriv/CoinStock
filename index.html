@@ -7,85 +7,96 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
   </head>
   <body>
-    <div class="user-inputs">
-      <div class="tabs">
-        <button id="single-tab" class='tablinks' type="button">Single Ticker</button>
-        <button id="comparison-tab" class='tablinks' type="button">Comparison</button>
-      </div>
-
-      <div id='single' class="tabcontent">
-        <div class="ticker-type">
-          <input type="radio" name="single-ticker" value="stocks" checked>Stocks</input>
-          <input type="radio" name="single-ticker" value="crypto">Crypto Currency</input>
+    <div class="app-content">
+      <div class="user-inputs">
+        <div class="tabs">
+          <button id="single-tab" class='tablinks' type="button">Single Ticker</button>
+          <button id="comparison-tab" class='tablinks' type="button">Comparison</button>
         </div>
 
-        <div class="ticker">
-          <label for="ticker">Ticker</label>
-          <div id="search">
-            <input id="single-ticker" style="text-transform:uppercase">
-            <ul id='autofill'></ul>
-          </div>
-        </div>
-
-        <div class="investment">
-          <label for="investment">Investment</label>
-          <input id="investment" style="text-transform:uppercase">
-        </div>
-
-        <button id='analyze' type="button">Analyze</button>
-      </div>
-
-      <div id='comparison' class="tabcontent"  style="display: block;">
-        <div class="comparison-tickers">
-          <div class="ticker-1-group">
-            <div class="ticker-1-type">
-              <input type="radio" name="ticker-1" value="stocks" checked>Stocks</input>
-              <input type="radio" name="ticker-1" value="crypto">Crypto Currency</input>
+        <div id='single' class="tabcontent">
+          <div class="single-ticker">
+            <div class="ticker-type">
+              <input type="radio" name="single-ticker" checked>Coin</input>
+              <input type="radio" name="single-ticker">Stock</input>
             </div>
 
-            <div class="ticker-1">
-              <label for="ticker">Ticker 1</label>
+            <div class="ticker">
+              <label for="ticker">Ticker</label>
               <div id="search">
-                <input class="ticker-input"
-                  id="ticker-1" style="text-transform:uppercase"
-                  value="AMZN">
-              </div>
-            </div>
-          </div>
-
-          <div class="ticker-2-group">
-            <div class="ticker-2-type">
-              <input type="radio" name="ticker-2" value="stocks">Stocks</input>
-              <input type="radio" name="ticker-2" value="crypto" checked>Crypto Currency</input>
-            </div>
-
-            <div class="ticker-2">
-              <label for="ticker-2">Ticker 2</label>
-              <div id="search">
-                <input class="ticker-input"
-                  id="ticker-2" style="text-transform:uppercase"
-                  value="BTC">
+                <input id="single-ticker" style="text-transform:uppercase">
                 <ul id='autofill'></ul>
               </div>
             </div>
+
+            <div class="investment">
+              <label for="investment">Investment</label>
+              <input id="investment" style="text-transform:uppercase">
+            </div>
           </div>
+
+          <button id='analyze' type="button">Pull Data</button>
         </div>
 
-        <button id='run-comparison' type="button">Run Comparison</button>
+        <div id='comparison' class="tabcontent"  style="display: block;">
+          <div class="comparison-tickers">
+            <div class="ticker-1-group">
+              <div class="ticker-1-type">
+                <input type="radio" name="ticker-1" checked>Coin</input>
+                <input type="radio" name="ticker-1">Stock</input>
+              </div>
+
+              <div class="ticker-1">
+                <label for="ticker">Ticker 1</label>
+                <div id="search">
+                  <input class="ticker-input"
+                    id="ticker-1" style="text-transform:uppercase"
+                    value="BTC">
+                </div>
+              </div>
+            </div>
+
+            <div class="ticker-2-group">
+              <div class="ticker-2-type">
+                <input type="radio" name="ticker-2">Coin</input>
+                <input type="radio" name="ticker-2" checked>Stock</input>
+              </div>
+
+              <div class="ticker-2">
+                <label for="ticker-2">Ticker 2</label>
+                <div id="search">
+                  <input class="ticker-input"
+                    id="ticker-2" style="text-transform:uppercase"
+                    value="AMZN">
+                  <ul id='autofill'></ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button id='run-comparison' type="button">Run Comparison</button>
+        </div>
+
+        <div id='ticker-list-box'>
+          <div id='list-label'>Stock Tickers</div>
+          <ul id='ticker-list'>
+        </div>
+
+        </ul>
+
       </div>
 
-      <div id='ticker-list-box'>
-        <div id='list-label'>Stocks Ticker List</div>
-        <ul id='ticker-list'>
+      <div class="app-chart">
+        <div class="">
+          <h1>Coin Stock</h1>
+        </div>
+        <chart>
+          <div id="loading-spinner" class="loader">Loading...</div>
+          <div id="errors" class="error-messages">Error Data Unavailable</div>
+        <chart>
       </div>
-
-      </ul>
-
-    </div>
-
-    <chart>
-    <chart>
       <script src="https://d3js.org/d3.v4.min.js"></script>
       <script src="./bundle.js" type='text/javascript' charset="utf-8"></script>
+    </div>
   </body>
 </html>

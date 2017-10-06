@@ -1,4 +1,4 @@
-# Market Visualizer
+# Coin Stock
 
 ## Overview
 
