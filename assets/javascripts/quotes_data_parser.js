@@ -1,7 +1,6 @@
 function parseQuotesData(quotesData, symbol, priceType, valueType){
   let startDate, endDate, quotes, parsedData, minPrice, maxPrice, priceStart;
   const avgDayPeriod = 5;
-
   const percentChange = (price, startPrice) => (
     (price - startPrice)/ startPrice * 100
   );

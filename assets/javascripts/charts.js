@@ -1,6 +1,7 @@
 import * as d3 from 'd3';
 
 export const chartStock = function (tickerSym, ajaxResponse, investment){
+  debugger;
   let data, startDate, endDate, minPrice, maxPrice, priceVariable;
 
   if (Object.keys(ajaxResponse)[0] === "history"){
@@ -57,7 +58,7 @@ export const chartStock = function (tickerSym, ajaxResponse, investment){
 
   //Chart dimensions
   const margin =  { top: 70, bot: 50, left: 50, right: 50 };
-  const width = 1000 - margin.left - margin.right;
+  const width = 900 - margin.left - margin.right;
   const height = 600 - margin.top - margin.bot;
 
   //Formats

@@ -16,7 +16,7 @@ function handleAnalyze(){
   errorsOff();
   spinnerOn();
   disableButtons();
-  const tickerInput = document.getElementById('ticker');
+  const tickerInput = document.getElementById('single-ticker');
   const activeCharts = document.getElementsByClassName('svg-chart');
   const investment = document.getElementById('investment');
 
@@ -32,7 +32,6 @@ function handleAnalyze(){
         if (res.Response === 'Error' || res['Error Message']) {
           spinnerOff();
           errorsOn();
-          enableButtons();
         }
         else {
           charts.chartStock(tickerInput.value, res, parseInt(investment.value));
@@ -45,13 +44,13 @@ function handleAnalyze(){
         if (res.Response === 'Error' || res['Error Message']) {
           spinnerOff();
           errorsOn();
-          enableButtons();
         }
         else { charts.chartStock(
         tickerInput.value, res, parseInt(investment.value));
       }
     });
   }
+  enableButtons();
 }
 
 function switchTabs(event, tabType){
@@ -150,7 +149,7 @@ function handleComparison(){
 
     if (tickerTypeRadios[0].checked) {
       utils.coinAjax(input.value.toUpperCase()).then(res => {
-        if (res.Response === 'Error' || res['Error Message']) {
+        if (res.Response !== 'Success') {
           spinnerOff();
           errorsOn();
           enableButtons();
