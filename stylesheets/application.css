@@ -2,7 +2,7 @@ html, body {
   height: 100%;
   width: 100%;
   margin: 0;
-  background-color: rgba(171, 215, 253, 0.39);
+  background: url(https://static.pexels.com/photos/9660/business-money-pink-coins.jpg) no-repeat center center fixed;
   overflow: hidden;
   font-family: "Open Sans";
 }
