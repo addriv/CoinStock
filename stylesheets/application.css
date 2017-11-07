@@ -2,8 +2,8 @@ html, body {
   height: 100%;
   width: 100%;
   margin: 0;
-  /* background-color: rgba(171, 215, 253, 0.39); */
-  background: url(https://static.pexels.com/photos/9660/business-money-pink-coins.jpg) no-repeat center center fixed;
+  background: url(http://res.cloudinary.com/dcl72qrya/image/upload/c_scale,w_1080/v1510088352/business-money-pink-coins_gwf55l.jpg) no-repeat center center fixed;
+  background-size: cover;
   overflow: hidden;
   font-family: "Open Sans";
 }
