@@ -19,7 +19,7 @@ Now you can chart stock prices such as Amazon(AMZN) and S&P 500(SPX) with crypto
   * Crypto Compare API for crypto currency prices
 
 <p align="center">
-  <img src="https://github.com/addriv/coin_stock/blob/master/assets/images/coinstock_overview.png">
+  <img src="https://github.com/addriv/coin_stock/blob/master/assets/images/overview.gif">
 </p>
 
 ## Functionality
