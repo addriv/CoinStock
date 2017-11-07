@@ -10,15 +10,17 @@ Coin Stock is just the app for that! It is an application that pulls and visuali
 
 Now you can chart stock prices such as Amazon(AMZN) and S&P 500(SPX) with cryptocurrencies like Bitcoin and Ethereum.
 
-![Design](https://github.com/addriv/coin_stock/blob/master/assets/images/coinstock_overview.png)
-
-## Technologies
+**Technologies**
 
 * D3.js
 * Vanilla JavaScript
 * REST APIs
   * Alpha Vantage API for stock prices
   * Crypto Compare API for crypto currency prices
+
+<p align="center">
+  <img src="https://github.com/addriv/coin_stock/blob/master/assets/images/coinstock_overview.png">
+</p>
 
 ## Functionality
 
@@ -29,7 +31,11 @@ Now you can chart stock prices such as Amazon(AMZN) and S&P 500(SPX) with crypto
 
 ## Design
 
-Coin stock uses a currying function to allow for simultaneous AJAX requests to pull data from both Alpha Avantage and Crypto Compare APIs.
+One of the challenges faced while building Coin Stock was the delay from pulling price data. Since AJAX requests to the Alpha Avantage and Crypto Compare APIs are asynchronous, a currying function was implemented to minimize the delay on charting price data.
+
+A data parsing function was created to parse data from either of the two APIs to keep code modular. After a response is received from the APIs, the response is parsed to get data into the desired format for D3.js.
+
+The currying function then waits for the correct number of responses(numTickers) to be parsed before running the comparisonChart function which takes the parsed data and charts prices with D3.js. This ensures the minimum delay is experienced by the user before price charting begins.
 
 ````js
 function curryAjax(numTickers){
@@ -50,3 +56,8 @@ function curryAjax(numTickers){
 }
 }
 ````
+
+## Future Features
+
+* Daily volume data bar charts with running averages
+* Allow users to pull data for a given date range
