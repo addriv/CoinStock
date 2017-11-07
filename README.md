@@ -1,4 +1,4 @@
-# COIN STOCK
+# [logo](Chttps://github.com/addriv/coin_stock/blob/master/favicon.ico) COIN STOCK
 
 Live version: [Coin Stock](https://addriv.github.io/coin_stock/)
 
